@@ -1,14 +1,9 @@
-package net.sourceforge.smartunit;
-import static org.junit.Assert.*;
-
+package org.rlogiacco.smartunit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sourceforge.smartunit.BeanPropertiesTester;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 

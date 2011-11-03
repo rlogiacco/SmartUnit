@@ -1,4 +1,4 @@
-package net.sourceforge.smartunit;
+package org.rlogiacco.smartunit;
 
 /*
  * This library is free software; you can redistribute it and/or
