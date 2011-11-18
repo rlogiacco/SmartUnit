@@ -20,8 +20,19 @@ public class BeanPropertiesTesterTest {
 		BeanPropertiesTester tester = new BeanPropertiesTester();
 		tester.testAllProperties(Enum.class);
 	}
+	
+	@Test
+    public void testAbstractClass() throws Exception {
+        BeanPropertiesTester tester = new BeanPropertiesTester();
+        tester.testAllProperties(Abstract.class);
+    }
+	
+	@Test
+    public void testInterface() throws Exception {
+        BeanPropertiesTester tester = new BeanPropertiesTester();
+        tester.testAllProperties(Interface.class);
+    }
 
-	@SuppressWarnings("unused")
 	public static class Simple {
 		private byte aByte;
 		private char aChar;
@@ -36,6 +47,8 @@ public class BeanPropertiesTesterTest {
 		private List<?> aList;
 		private Map<?,?> aMap;
 		private Set<?> aSet;
+        private Abstract abstractType;
+        private Interface interfaceType;
 		
 		public byte getAByte() {
 			return aByte;
@@ -91,33 +104,53 @@ public class BeanPropertiesTesterTest {
 		public void setAnObject(Object anObject) {
 			this.anObject = anObject;
 		}
-		public Collection getACollection() {
+		public Collection<?> getACollection() {
 			return aCollection;
 		}
-		public void setACollection(Collection aCollection) {
+		public void setACollection(Collection<?> aCollection) {
 			this.aCollection = aCollection;
 		}
-		public List getAList() {
+		public List<?> getAList() {
 			return aList;
 		}
-		public void setAList(List aList) {
+		public void setAList(List<?> aList) {
 			this.aList = aList;
 		}
-		public Map getAMap() {
+		public Map<?,?> getAMap() {
 			return aMap;
 		}
-		public void setAMap(Map aMap) {
+		public void setAMap(Map<?,?> aMap) {
 			this.aMap = aMap;
 		}
-		public Set getASet() {
+		public Set<?> getASet() {
 			return aSet;
 		}
-		public void setASet(Set aSet) {
+		public void setASet(Set<?> aSet) {
 			this.aSet = aSet;
 		}
+        public Abstract getAbstractType() {
+            return abstractType;
+        }
+        public void setAbstractType(Abstract abstractType) {
+            this.abstractType = abstractType;
+        }
+        public Interface getInterfaceType() {
+            return interfaceType;
+        }
+        public void setInterfaceType(Interface interfaceType) {
+            this.interfaceType = interfaceType;
+        }
 	}
 	
 	public enum Enum {
 		ONE, TWO, THREE;
 	}
+	
+    public static abstract class Abstract {
+	    
+	}
+	
+    public static interface Interface {
+        
+    }
 }

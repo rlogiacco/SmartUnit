@@ -18,6 +18,7 @@ package org.rlogiacco.smartunit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.mockito.Mockito;
 
 import junit.framework.TestCase;
 
@@ -165,6 +168,8 @@ public class BeanPropertiesTester {
 			return mappings.get(type);
 		} else if (type.isEnum()) {
 			return type.getEnumConstants()[0];
+		} else if (Modifier.isAbstract(type.getModifiers()) || Modifier.isInterface(type.getModifiers())) {
+		    return Mockito.mock(type);
 		} else {
 			return type.newInstance();
 		}
