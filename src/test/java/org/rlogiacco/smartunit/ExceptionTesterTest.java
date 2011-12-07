@@ -36,12 +36,12 @@ public class ExceptionTesterTest {
         }
 
         public TestException(String message, Locale locale) {
-            //Do something with that locale
+            // Do something with that locale
             super(message);
         }
-        
+
         public TestException(String message, Locale locale, Throwable cause) {
-          //Do something with that locale
+            // Do something with that locale
             super(message, cause);
         }
     }
