@@ -29,16 +29,12 @@ public class ExceptionTester extends AbstractTester {
         }
     }
 
-    public void testConstructor(Class<?> type, Class<?>[] types, Object[] values) throws SecurityException, NoSuchMethodException {
+    public void testConstructor(Class<?> type, Class<?>[] types, Object[] values) throws Exception {
         Constructor<?> constructor = type.getConstructor(types);
         try {
             constructor.newInstance(values);
-        } catch (IllegalArgumentException iae) {
-            Assert.fail("An illegal argument has been provided: " + iae);
         } catch (InstantiationException ie) {
-            Assert.fail("Instantion failed: " + ie);
-        } catch (IllegalAccessException iae) {
-            Assert.fail("Constructor access denied: " + iae);
+            Assert.fail("Instantiation failed: " + ie);
         } catch (InvocationTargetException ite) {
             Assert.fail("An exception has been thrown during instantiation: " + ite.getCause());
         }

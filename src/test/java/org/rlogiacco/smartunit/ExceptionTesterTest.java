@@ -18,6 +18,18 @@ public class ExceptionTesterTest {
         tester.testConstructor(TestException.class, null, null);
     }
 
+    @Test(expected=AssertionError.class)
+    public void testInvocationTargetException() throws Exception {
+        ExceptionTester tester = new ExceptionTester();
+        tester.testConstructor(InvocationTargetExceptionTest.class, null, null);
+    }
+
+    @Test(expected=AssertionError.class)
+    public void testInstantiationException() throws Exception {
+        ExceptionTester tester = new ExceptionTester();
+        tester.testConstructor(InstantiationExceptionTest.class, null, null);
+    }
+
     @SuppressWarnings("all")
     public static class TestException extends Exception {
         public TestException() {
@@ -43,6 +55,19 @@ public class ExceptionTesterTest {
         public TestException(String message, Locale locale, Throwable cause) {
             // Do something with that locale
             super(message, cause);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public abstract static class InstantiationExceptionTest extends Exception {
+        public InstantiationExceptionTest() {
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static class InvocationTargetExceptionTest extends Exception {
+        public InvocationTargetExceptionTest() {
+            throw new RuntimeException();
         }
     }
 }
