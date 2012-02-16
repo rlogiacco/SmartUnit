@@ -1,0 +1,1 @@
+This library is licensed under LGPL v3.0 and MPL v2.0 licenses and as such is freely usable in commercial products.
