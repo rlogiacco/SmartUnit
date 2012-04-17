@@ -66,6 +66,41 @@ public class BeanPropertiesTesterTest {
         tester.testProperty(Partial.class, "setter", new String());
         verify(partial, times(0)).getGetter();
     }
+    
+    @Test
+    public void testDefined() throws Exception {
+        BeanPropertiesTester tester = new BeanPropertiesTester();
+        Inherited inherited = new Inherited();
+        inherited = spy(inherited);
+        tester.addMapping(Inherited.class, inherited);
+        tester.testAllDefinedProperties(Inherited.class);
+        verify(inherited, times(0)).getInherited();
+        verify(inherited, times(0)).setInherited(any(Object.class));
+        verify(inherited, times(0)).getAString();
+        verify(inherited, times(0)).setAString(any(String.class));
+        verify(inherited).getAnotherString();
+        verify(inherited).setAnotherString(any(String.class));
+    }
+    
+    @Test
+    public void testInheritedAndDefined() throws Exception {
+        BeanPropertiesTester tester = new BeanPropertiesTester();
+        Inherited inherited = new Inherited();
+        inherited = spy(inherited);
+        tester.addMapping(Inherited.class, inherited);
+        tester.testAllProperties(Inherited.class);
+        verify(inherited).getInherited();
+        verify(inherited).setInherited(any(Object.class));
+        verify(inherited).getAString();
+        verify(inherited).setAString(any(String.class));
+        verify(inherited).getAnotherString();
+        verify(inherited).setAnotherString(any(String.class));
+    }
+    
+    @Test
+    public void testInheritedExcluded() throws Exception {
+        
+    }
 
     public static class Simple {
         private byte aByte;
@@ -83,6 +118,8 @@ public class BeanPropertiesTesterTest {
         private Set<?> aSet;
         private Abstract abstractType;
         private Interface interfaceType;
+        
+        protected Object inherited;
 
         public byte getAByte() {
             return aByte;
@@ -202,6 +239,41 @@ public class BeanPropertiesTesterTest {
 
         public void setInterfaceType(Interface interfaceType) {
             this.interfaceType = interfaceType;
+        }
+        
+        public Object getInherited() {
+            return inherited;
+        }
+
+        public void setInherited(Object inherited) {
+            this.inherited = inherited;
+        }
+    }
+    
+    public static class Inherited extends Simple {
+        private String anotherString;
+        
+        public String getAnotherString() {
+            return anotherString;
+        }
+
+        public void setAnotherString(String anotherString) {
+            this.anotherString = anotherString;
+        }
+
+        @Override
+        public Object getInherited() {
+            return inherited;
+        }
+
+        @Override
+        public void setInherited(Object inherited) {
+            this.inherited = inherited;
+        }
+
+        @Override
+        public String getAString() {
+            return super.getAString();
         }
     }
 

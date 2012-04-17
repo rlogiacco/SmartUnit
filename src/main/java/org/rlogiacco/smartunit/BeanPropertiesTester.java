@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -43,24 +44,48 @@ public class BeanPropertiesTester extends AbstractTester {
     public void setTypeExclusions(final Class<?>... types) {
         excludesByType = Arrays.asList(types);
     }
-
-    public void testAllProperties(Class<?> type) throws Exception {
+    
+    public void testAllDefinedProperties(Class<?> type) throws Exception {
         Field[] fields = type.getDeclaredFields();
         Object instance = this.getInstance(type);
         for (Field field : fields) {
-            this.testField(instance, field);
+            this.testField(instance, type, field);
+        }
+    }
+
+    public void testAllProperties(Class<?> type) throws Exception {
+        this.testAllDefinedProperties(type);
+        
+        Collection<Field> fields = this.listOverriden(type, type.getSuperclass(), new ArrayList<Field>());
+        Object instance = this.getInstance(type);
+        for (Field field : fields) {
+            this.testField(instance, type, field);
+        }
+    }
+    
+    private Collection<Field> listOverriden(Class<?> orig, Class<?> type, Collection<Field> fields) {
+        if (type == null || type.equals(Object.class)) {
+            return fields;
+        } else {
+            for (Field field : type.getDeclaredFields()) {
+                if (this.getGetter(orig, field) != null || this.getSetter(orig, field) != null) {
+                    field.setAccessible(true);
+                    fields.add(field);
+                }
+            }
+            return listOverriden(orig, type.getSuperclass(), fields);
         }
     }
 
     public void testProperty(Class<?> type, String fieldName, Object value) throws Exception {
         Field field = type.getDeclaredField(fieldName);
         Object instance = this.getInstance(type);
-        this.testField(instance, field);
+        this.testField(instance, type, field);
     }
 
-    private void testField(Object instance, Field field) throws Exception {
-        Method setter = this.getSetter(field);
-        Method getter = this.getGetter(field);
+    private void testField(Object instance, Class<?> type, Field field) throws Exception {
+        Method setter = this.getSetter(type, field);
+        Method getter = this.getGetter(type, field);
         if (setter != null && getter != null) {
             Object value = this.getInstance(field.getType());
             setter.invoke(instance, value);
@@ -81,27 +106,27 @@ public class BeanPropertiesTester extends AbstractTester {
         }
     }
 
-    private Method getSetter(final Field field) {
+    private Method getSetter(final Class<?> type, final Field field) {
         if (excludesByName.contains(field.getName()) || excludesByType.contains(field.getType())) {
             return null;
         }
         try {
-            return field.getDeclaringClass().getMethod(this.getMethodName("set", field), field.getType());
+            return type.getMethod(this.getMethodName("set", field), field.getType());
         } catch (NoSuchMethodException e) {
             return null;
         }
     }
 
-    private Method getGetter(final Field field) {
+    private Method getGetter(final Class<?> type, final Field field) {
         if (excludesByName.contains(field.getName()) || excludesByType.contains(field.getType())) {
             return null;
         }
         Method method = null;
         try {
-            method = field.getDeclaringClass().getMethod(this.getMethodName("get", field));
+            method = type.getMethod(this.getMethodName("get", field));
         } catch (NoSuchMethodException nsme) {
             try {
-                method = field.getDeclaringClass().getMethod(this.getMethodName("is", field));
+                method = type.getMethod(this.getMethodName("is", field));
             } catch (NoSuchMethodException nsmeAgain) {
                 return null;
             }
