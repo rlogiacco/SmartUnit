@@ -1,15 +1,13 @@
 package org.rlogiacco.smartunit;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class AbstractTesterTest {
 
