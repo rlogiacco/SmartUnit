@@ -9,7 +9,7 @@
   <scm>
     <url>https://github.com/rlogiacco/SmartUnit</url>
     <connection>git://github.com/rlogiacco/SmartUnit.git</connection>
-    <developerConnection>scm:git:https://github.com/rlogiacco/SmartUnit.git</developerConnection>
+    <developerConnection>scm:git:ssh://github.com/rlogiacco/SmartUnit.git</developerConnection>
   </scm>
 
   <build>
