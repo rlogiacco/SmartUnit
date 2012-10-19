@@ -1,4 +1,4 @@
-package org.rlogiacco.smartunit;
+package org.agileware.test;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.spy;
@@ -13,6 +13,7 @@ import java.util.Set;
 
 import junit.framework.AssertionFailedError;
 
+import org.agileware.test.BeanPropertiesTester;
 import org.junit.Test;
 
 public class BeanPropertiesTesterTest {

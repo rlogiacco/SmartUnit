@@ -1,4 +1,4 @@
-package org.rlogiacco.smartunit;
+package org.agileware.test;
 
 import java.lang.reflect.Modifier;
 import java.sql.Date;

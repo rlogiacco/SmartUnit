@@ -1,7 +1,8 @@
-package org.rlogiacco.smartunit;
+package org.agileware.test;
 
 import java.util.Locale;
 
+import org.agileware.test.ExceptionTester;
 import org.junit.Test;
 
 public class ExceptionTesterTest {

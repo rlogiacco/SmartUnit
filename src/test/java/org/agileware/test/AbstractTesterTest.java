@@ -1,4 +1,4 @@
-package org.rlogiacco.smartunit;
+package org.agileware.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Date;
 
+import org.agileware.test.AbstractTester;
 import org.junit.Test;
 
 public class AbstractTesterTest {

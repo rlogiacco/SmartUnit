@@ -1,4 +1,4 @@
-package org.rlogiacco.smartunit;
+package org.agileware.test;
 
 /*
  * This library is free software; you can redistribute it and/or

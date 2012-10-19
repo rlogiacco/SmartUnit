@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.rlogiacco.smartunit;
+package org.agileware.test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
