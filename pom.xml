@@ -1,19 +1,54 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.rlogiacco</groupId>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>11</version>
+  </parent>
+
+  <groupId>org.agileware</groupId>
   <artifactId>smartunit</artifactId>
   <version>0.6.0-SNAPSHOT</version>
-  <name>SmartUnit</name>
+  <packaging>jar</packaging>
 
+  <name>SmartUnit</name>
+  <description>Unit test utilities library</description>
+  <url>https://github.com/rlogiacco/smartunit</url>
+  <licenses>
+    <license>
+      <url>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE v3.0</name>
+    </license>
+    <license>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <name>APACHE LICENSE v2.0</name>
+    </license>
+  </licenses>
   <scm>
     <url>https://github.com/rlogiacco/SmartUnit</url>
     <connection>scm:git:ssh://git@github.com/rlogiacco/SmartUnit.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/rlogiacco/SmartUnit.git</developerConnection>
   </scm>
+
+  <developers>
+    <developer>
+      <id>rlogiacco</id>
+      <name>Roberto Lo Giacco</name>
+      <organization>AgileWare.org</organization>
+    </developer>
+  </developers>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
@@ -25,7 +60,7 @@
         </configuration>
         <executions>
           <execution>
-            <phase>package</phase>
+            <phase>test</phase>
             <goals>
               <goal>cobertura</goal>
             </goals>
@@ -61,7 +96,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.1</version>
+      <version>4.10</version>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
