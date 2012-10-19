@@ -26,9 +26,11 @@
       <name>APACHE LICENSE v2.0</name>
     </license>
   </licenses>
+  
   <scm>
     <url>https://github.com/rlogiacco/SmartUnit</url>
     <connection>scm:git:ssh://git@github.com/rlogiacco/SmartUnit.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/rlogiacco/SmartUnit.git</developerConnection>
   </scm>
 
   <developers>
