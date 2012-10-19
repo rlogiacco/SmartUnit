@@ -9,7 +9,7 @@
 
   <groupId>org.agileware</groupId>
   <artifactId>smartunit</artifactId>
-  <version>0.6.0</version>
+  <version>0.7.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>SmartUnit</name>
@@ -30,7 +30,7 @@
     <url>https://github.com/rlogiacco/SmartUnit</url>
     <connection>scm:git:ssh://git@github.com/rlogiacco/SmartUnit.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/rlogiacco/SmartUnit.git</developerConnection>
-    <tag>smartunit-0.6.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <developers>
