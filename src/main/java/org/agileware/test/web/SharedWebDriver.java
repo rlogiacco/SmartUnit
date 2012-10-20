@@ -4,6 +4,76 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
 /**
+ * This is a Selenium WebDriver implementation to be used as a wrapper for any
+ * real web browser driver implementation to prevent a new web browser window to
+ * be created on each test.
+ * 
+ * <p>
+ * This solution represents a compromise between test performances and
+ * reliability: we are not in a perfectly clean environment at the beginning of
+ * every test, but we are not paying the price of creating a new browser
+ * instance.
+ * </p>
+ * 
+ * <p>
+ * This implementation supports two types of test: without any dependency
+ * injection mechanism and with dependency injection, like Spring Test or
+ * Cucumber JVM.
+ * </p>
+ * 
+ * 
+ * <p>
+ * <b>No injection</b>
+ * </p>
+ * 
+ * <p>
+ * A classic singleton pattern is implemented and the browser will be destroyed
+ * upon JVM destruction.
+ * </p>
+ * 
+ * <p>
+ * New browser instances should be obtained by using one of the
+ * <code>open</code> static methods. The no argument version uses the
+ * <i>selenium.driver</i> system property to specify the delegate implementation
+ * web driver class.
+ * </p>
+ * 
+ * <p>
+ * In case a browser shutdown is required, the static <code>destroy</code>
+ * method must be used as both <code>close</code> and <code>quit</code>
+ * WebDriver methods implementations prevents the browser process to be closed
+ * by leaving at least one browser window open.
+ * </p>
+ * 
+ * <p>
+ * <b>With injection</b>
+ * </p>
+ * 
+ * <p>
+ * The instance creation must occur throughout one of the <code>open</code>
+ * static methods.
+ * </p>
+ * 
+ * <p>
+ * Browser shutdown upon test suite completion is still supported through JVM
+ * shutdown hook.
+ * </p>
+ * 
+ * <p>
+ * The following is an example of Spring configuration:
+ * 
+ * <pre>
+ *   &lt;bean id="driver" class="org.agileware.test.web.SharedWebDriver" factory-method="open">
+ *     &lt;constructor-arg ref="delegate" />
+ *   &lt;/bean>
+ * 
+ *   &lt;bean id="delegate" class="org.openqa.selenium.chrome.ChromeDriver">
+ *     &lt;!-- capabilities can be set here -->
+ *   &lt;/bean>
+ * </pre>
+ * 
+ * </p>
+ * 
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
  * 
  */
@@ -24,16 +94,27 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 		});
 	}
 
-	public SharedWebDriver(WebDriver delegate) {
+	/**
+	 * Creates a new instance wrapping the provided delegate WebDriver
+	 * implementation.
+	 * 
+	 * @param delegate
+	 *            the delegate WebDriver instance
+	 */
+	protected SharedWebDriver(WebDriver delegate) {
 		super(delegate);
 	}
 
 	/**
+	 * Returns the current shared instance or creates a new one using the
+	 * provided delegate implementation.
+	 * 
 	 * @param delegate
-	 * @return
-	 * @throws WebDriverException
+	 *            the delegate WebDriver instance to use if no shared instance
+	 *            is available
+	 * @return the shared instance
 	 */
-	public static SharedWebDriver open(WebDriver delegate) throws WebDriverException {
+	public static synchronized SharedWebDriver open(WebDriver delegate) {
 		if (instance == null) {
 			instance = new SharedWebDriver(delegate);
 		} else {
@@ -43,24 +124,33 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	}
 
 	/**
-	 * @return
-	 * @throws RuntimeException
+	 * Returns the current shared instance or creates a new one using the
+	 * <i>selenium.driver</i> system property to determine the delegate
+	 * implementation.
+	 * 
+	 * @return the shared instance
+	 * @throws WebDriverException
+	 *             if the delegate implementation cannot be created
 	 */
 	@SuppressWarnings("unchecked")
 	public static SharedWebDriver open() throws WebDriverException {
 		try {
 			Class<?> delegate = Class.forName(System.getProperty(SELENIUM_DRIVER_PROPERTY));
 			return open((Class<? extends WebDriver>) delegate);
-		} catch (ClassNotFoundException e) {
-			throw new WebDriverException("Driver class not found", e);
+		} catch (ClassNotFoundException cnfe) {
+			throw new WebDriverException("Driver class not found", cnfe);
 		}
 	}
 
 	/**
+	 * Returns the current shared instance or creates a new one using the
+	 * provided WebDriver implementation type to create the delegate instance.
+	 * 
 	 * @param delegate
-	 * @param capabilities
-	 * @return
-	 * @throws RuntimeException
+	 *            the WebDriver implementation type
+	 * @return the shared instance
+	 * @throws WebDriverException
+	 *             if the delegate instance cannot be created
 	 */
 	public static synchronized SharedWebDriver open(Class<? extends WebDriver> delegate) throws WebDriverException {
 		if (instance == null) {
@@ -112,7 +202,13 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 		delegate.switchTo().window(current);
 	}
 
-	public static void destroy() {
+	/**
+	 * Destroys the current shared instance closing all the browser windows.
+	 * This method is here as last resort: if you find yourself using this
+	 * method you might want to reconsider the usage of this WebDriver
+	 * implementation.
+	 */
+	public static synchronized void destroy() {
 		if (instance != null) {
 			if (instance.delegate != null) {
 				instance.delegate.quit();

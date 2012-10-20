@@ -12,6 +12,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+/**
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *
+ */
 public class ScreenshotTestRuleTest {
 
 	@Test

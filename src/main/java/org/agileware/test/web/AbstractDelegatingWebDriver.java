@@ -15,23 +15,39 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 /**
+ * Abstract base class providing a delegator pattern implementation for Selenium
+ * WebDriver implementations.
+ * 
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
  * 
  */
 public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScreenshot, JavascriptExecutor {
+	/**
+	 * The WebDriver implementation to delegate operations to.
+	 */
 	protected WebDriver delegate;
 
+	/**
+	 * Creates a delegating WebDriver around a WebDriver implementation.
+	 * 
+	 * @param delegate
+	 *            the WebDriver implementation instance to delegate operations
+	 *            to.
+	 */
 	public AbstractDelegatingWebDriver(WebDriver delegate) {
 		this.delegate = delegate;
 	}
 
 	/**
-	 * @return
+	 * @return the delegate WebDriver instance
 	 */
 	public WebDriver getDelegate() {
 		return this.delegate;
 	}
 
+	/**
+	 * @see org.openqa.selenium.WebDriver#close()
+	 */
 	public void close() {
 		delegate.close();
 	}
@@ -125,11 +141,10 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 	 *      java.lang.Object[])
 	 */
 	public Object executeAsyncScript(String script, Object... args) throws WebDriverException {
-		if (delegate instanceof JavascriptExecutor) {
+		try {
 			return ((JavascriptExecutor) delegate).executeAsyncScript(script, args);
-		} else {
-			throw new WebDriverException("Delegate implementation `" + delegate.getClass()
-					+ "` does not support this feature");
+		} catch (ClassCastException cce) {
+			throw new WebDriverException("Delegate implementation `" + delegate.getClass() + "` does not support this feature");
 		}
 	}
 
@@ -138,11 +153,10 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 	 *      java.lang.Object[])
 	 */
 	public Object executeScript(String script, Object... args) throws WebDriverException {
-		if (delegate instanceof JavascriptExecutor) {
+		try {
 			return ((JavascriptExecutor) delegate).executeScript(script, args);
-		} else {
-			throw new WebDriverException("Delegate implementation `" + delegate.getClass()
-					+ "` does not support this feature");
+		} catch (ClassCastException cce) {
+			throw new WebDriverException("Delegate implementation `" + delegate.getClass() + "` does not support this feature");
 		}
 	}
 
@@ -150,11 +164,11 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 	 * @see org.openqa.selenium.TakesScreenshot#getScreenshotAs(org.openqa.selenium.OutputType)
 	 */
 	public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
-		if (delegate instanceof TakesScreenshot) {
+		try {
 			return ((TakesScreenshot) delegate).getScreenshotAs(target);
-		} else {
-			throw new WebDriverException("Delegate implementation `" + delegate.getClass()
-					+ "` does not support this feature");
+		} catch (ClassCastException cce) {
+			throw new WebDriverException("Delegate implementation `" + delegate.getClass() + "` does not support this feature");
 		}
 	}
+	
 }

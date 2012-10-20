@@ -10,23 +10,44 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
+/**
+ * Augments JUnit test suites based on Selenium WebDriver by generating a
+ * browser screenshot every time a test failure occurs.
+ * 
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ * 
+ */
 public class ScreenshotTestRule implements TestRule {
 	public static final String DEFAULT_OUTPUT_FOLDER = "target/surefire-reports/";
 
 	private WebDriver driver;
 
 	private String outputFolder;
-	
+
+	/**
+	 * @param driver
+	 *            the WebDriver instance used in the tests
+	 */
 	public ScreenshotTestRule(WebDriver driver) {
 		this(driver, DEFAULT_OUTPUT_FOLDER);
 	}
-	
+
+	/**
+	 * @param driver
+	 *            the WebDriver instance used in the tests
+	 * @param outputFolder
+	 *            the folder where screenshots will be saved
+	 */
 	public ScreenshotTestRule(WebDriver driver, String outputFolder) {
 		this.driver = driver;
 		this.outputFolder = outputFolder;
 		new File(outputFolder).mkdirs();
 	}
 
+	/**
+	 * @see org.junit.rules.TestRule#apply(org.junit.runners.model.Statement,
+	 *      org.junit.runner.Description)
+	 */
 	public Statement apply(final Statement base, final Description description) {
 		return new Statement() {
 
@@ -41,7 +62,13 @@ public class ScreenshotTestRule implements TestRule {
 			}
 		};
 	}
-	
+
+	/**
+	 * Obtains a screenshot from the browser and saves it in the output folder.
+	 * 
+	 * @param method
+	 *            name of the failing test method
+	 */
 	private void capture(String method) {
 		try {
 			FileOutputStream out = new FileOutputStream(outputFolder + "screenshot-" + method + ".png");
