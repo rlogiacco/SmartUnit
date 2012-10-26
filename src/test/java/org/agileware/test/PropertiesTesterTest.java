@@ -21,44 +21,44 @@ import junit.framework.AssertionFailedError;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class BeanPropertiesTesterTest {
+public class PropertiesTesterTest {
 
     @Test(expected=InstantiationException.class)
     public void testNonInstantiable() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(URL.class);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(URL.class);
     }
     
     @Test
     public void testClass() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(Simple.class);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Simple.class);
     }
 
     @Test
     public void testEnum() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(Enum.class);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Enum.class);
     }
 
     @Test
     public void testAbstractClass() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(Abstract.class);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Abstract.class);
     }
 
     @Test
     public void testInterface() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(Interface.class);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Interface.class);
     }
 
     @Test
     public void testPartial() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Partial mock = spy(new Partial());
         tester.addMapping(Partial.class, mock);
-        tester.testAllProperties(Partial.class);
+        tester.testAll(Partial.class);
         verify(mock, times(2)).getGetter();
         verify(mock, times(2)).setSetter(any(Object.class));
         verify(mock, times(1)).getGetterInt();
@@ -69,43 +69,43 @@ public class BeanPropertiesTesterTest {
 
     @Test
     public void testProperty() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testProperty(Partial.class, "field", new String());
+        PropertiesTester tester = new PropertiesTester();
+        tester.test(Partial.class, "field", new String());
     }
     
     @Test
     public void testBooleanProperty() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Simple simple = spy(new Simple());
         tester.addMapping(Simple.class, simple);
-        tester.testProperty(Simple.class, "aBoolean", new Boolean(true));
+        tester.test(Simple.class, "aBoolean", new Boolean(true));
         verify(simple).isABoolean();
     }
 
     @Test
     public void testExcludeByName() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         tester.setNameExclusions("getter");
         Partial partial = spy(new Partial());
-        tester.testProperty(Partial.class, "getter", new String());
+        tester.test(Partial.class, "getter", new String());
         verify(partial, times(0)).getGetter();
     }
     
     @Test
     public void testExcludeByType() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         tester.setTypeExclusions(Object.class);
         Partial partial = spy(new Partial());
-        tester.testProperty(Partial.class, "setter", new String());
+        tester.test(Partial.class, "setter", new String());
         verify(partial, times(0)).getGetter();
     }
 
     @Test
     public void testDefined() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
-        tester.testAllProperties(Inherited.class);
+        tester.testAll(Inherited.class);
         verify(inherited, times(0)).getInherited();
         verify(inherited, times(0)).setInherited(any(Boolean.class));
         verify(inherited, times(0)).getAString();
@@ -116,10 +116,10 @@ public class BeanPropertiesTesterTest {
 
     @Test
     public void testInheritedAndDefined() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
-        tester.testAllProperties(Inherited.class, false);
+        tester.testAll(Inherited.class, false);
         verify(inherited, times(2)).getInherited();
         verify(inherited, times(2)).setInherited(any(Boolean.class));
         verify(inherited, times(2)).getAString();
@@ -130,25 +130,25 @@ public class BeanPropertiesTesterTest {
 
     @Test
     public void testInherithedWithNoSuperclass() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(Simple.class, false);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Simple.class, false);
     }
     
     @Test
     public void testInherithedInterface() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
-        tester.testAllProperties(Interface.class, false);
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Interface.class, false);
     }
 
     @Test
     public void testPropertiesMappings() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
                 new String[] { "inherited", "mappedProperty" }, // not mapped as it is missing the # in front of the field name
                 new String[] { "anotherString", "mappedString" });
-        tester.testAllProperties(Inherited.class);
+        tester.testAll(Inherited.class);
         verify(inherited, times(0)).isMappedProperty();
         verify(inherited, times(0)).setMappedProperty(any(Boolean.class));
         verify(inherited, times(2)).getMappedString();
@@ -158,12 +158,12 @@ public class BeanPropertiesTesterTest {
 
     @Test
     public void testNonExistantPropertiesMappings() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
                 new String[] { "anotherString", "nonExistant" });
-        tester.testAllProperties(Inherited.class);
+        tester.testAll(Inherited.class);
         verify(inherited, times(0)).isMappedProperty();
         verify(inherited, times(0)).setMappedProperty(any(Boolean.class));
         verify(inherited, times(0)).getMappedString();
@@ -173,13 +173,13 @@ public class BeanPropertiesTesterTest {
     
     @Test
     public void testInheritedPropertiesMappings() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
                 new String[] { "#inherited", "mappedProperty" }, 
                 new String[] { "anotherString", "mappedString" });
-        tester.testAllProperties(Inherited.class, false);
+        tester.testAll(Inherited.class, false);
         verify(inherited, times(2)).isMappedProperty();
         verify(inherited, times(2)).setMappedProperty(any(Boolean.class));
         verify(inherited, times(2)).getMappedString();
@@ -189,12 +189,12 @@ public class BeanPropertiesTesterTest {
     
     @Test
     public void testPropertiesMappingsMultiple() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
                 new String[] { "#inherited", "mappedProperty", "mappedPropertyAgain", "nonExisting"});
-        tester.testAllProperties(Inherited.class, false);
+        tester.testAll(Inherited.class, false);
         verify(inherited, times(2)).isMappedProperty();
         verify(inherited, times(2)).setMappedProperty(any(Boolean.class));
         verify(inherited, times(2)).setMappedPropertyAgain(any(Boolean.class));
@@ -202,13 +202,13 @@ public class BeanPropertiesTesterTest {
     
     @Test
     public void testPropertiesMappingsConcatenated() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
                 new String[] { "anotherString", "mappedString"},
                 new String[] { "anotherString", "mappedAgain"});
-        tester.testAllProperties(Inherited.class);
+        tester.testAll(Inherited.class);
         verify(inherited, times(0)).isMappedProperty();
         verify(inherited, times(0)).setMappedProperty(any(Boolean.class));
         verify(inherited, times(2)).getMappedString();
@@ -218,13 +218,13 @@ public class BeanPropertiesTesterTest {
     
     @Test(expected=AssertionFailedError.class)
     public void testPropertiesMappingsFailure() throws Exception {
-        BeanPropertiesTester tester = new BeanPropertiesTester();
+        PropertiesTester tester = new PropertiesTester();
         Inherited inherited = new Inherited();
 
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
                 new String[] { "anotherString"});
-        tester.testAllProperties(Inherited.class);
+        tester.testAll(Inherited.class);
     }
 
     public static class Simple {

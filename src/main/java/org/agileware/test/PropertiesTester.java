@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
  * 
  */
-public class BeanPropertiesTester extends AbstractTester {
+public class PropertiesTester extends AbstractTester {
 
     /**
      * Property names exclusion list.
@@ -130,8 +130,8 @@ public class BeanPropertiesTester extends AbstractTester {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    public void testAllProperties(Class<?> type) throws Exception {
-        this.testAllProperties(type, true);
+    public void testAll(Class<?> type) throws Exception {
+        this.testAll(type, true);
     }
 
     /**
@@ -148,7 +148,7 @@ public class BeanPropertiesTester extends AbstractTester {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    public void testAllProperties(Class<?> type, boolean definedOnly) throws Exception {
+    public void testAll(Class<?> type, boolean definedOnly) throws Exception {
         Object instance = this.getInstance(type);
         for (Field field : type.getDeclaredFields()) {
             this.testField(instance, type, field);
@@ -172,7 +172,7 @@ public class BeanPropertiesTester extends AbstractTester {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    public void testProperty(Class<?> type, String fieldName, Object value) throws Exception {
+    public void test(Class<?> type, String fieldName, Object value) throws Exception {
         Field field = type.getDeclaredField(fieldName);
         Object instance = this.getInstance(type);
         this.testField(instance, type, field);

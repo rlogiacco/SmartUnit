@@ -18,9 +18,9 @@ import java.util.List;
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
  * 
  */
-public class ExceptionTester extends AbstractTester {
+public class ConstructorsTester extends AbstractTester {
 
-	public void testAllConstructors(Class<? extends Exception> type) throws Exception {
+	public void testAll(Class<? extends Exception> type) throws Exception {
 		this.testAllConstructors(type, false);
 	}
 	public void testAllConstructors(Class<? extends Exception> type, boolean lenient) throws Exception {
@@ -30,16 +30,16 @@ public class ExceptionTester extends AbstractTester {
 			for (Class<?> paramType : constructor.getParameterTypes()) {
 				params.add(this.getInstance(paramType));
 			}
-			this.testConstructor(type, constructor.getParameterTypes(), params.toArray(), lenient);
+			this.test(type, constructor.getParameterTypes(), params.toArray(), lenient);
 		}
 	}
 	
 
-	public void testConstructor(Class<?> type, Class<?>[] paramTypes, Object[] params) throws Exception {
-		this.testConstructor(type, paramTypes, params, false);
+	public void test(Class<?> type, Class<?>[] paramTypes, Object[] params) throws Exception {
+		this.test(type, paramTypes, params, false);
 	}
 
-	public void testConstructor(Class<?> type, Class<?>[] paramTypes, Object[] params, boolean lenient) throws Exception {
+	public void test(Class<?> type, Class<?>[] paramTypes, Object[] params, boolean lenient) throws Exception {
 		assertNotNull(paramTypes);
 		assertNotNull(params);
 		Constructor<?> constructor = type.getConstructor(paramTypes);
@@ -58,7 +58,7 @@ public class ExceptionTester extends AbstractTester {
 		}
 	}
 
-	protected void testParameter(Object instance, Class<?> type, Object value, Collection<Field> fields, boolean lenient)
+	private void testParameter(Object instance, Class<?> type, Object value, Collection<Field> fields, boolean lenient)
 			throws Exception {
 		for (Field field : fields) {
 			if (field.getType().equals(type)) {

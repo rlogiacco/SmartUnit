@@ -5,42 +5,42 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-public class ExceptionTesterTest {
+public class ConstructorsTesterTest {
 
     @Test
     public void testTestAllConstructors() throws Exception {
-        ExceptionTester tester = new ExceptionTester();
-        tester.testAllConstructors(TestException.class);
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.testAll(TestException.class);
     }
 
     @Test
     public void testTestConstructor() throws Exception {
-        ExceptionTester tester = new ExceptionTester();
-        tester.testConstructor(TestException.class, new Class<?>[0], new Object[0]);
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.test(TestException.class, new Class<?>[0], new Object[0]);
     }
 
     @Test(expected=AssertionError.class)
     public void testInvocationTargetException() throws Exception {
-        ExceptionTester tester = new ExceptionTester();
-        tester.testConstructor(InvocationTargetExceptionTest.class, new Class<?>[0], new Object[0]);
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.test(InvocationTargetExceptionTest.class, new Class<?>[0], new Object[0]);
     }
 
     @Test(expected=AssertionError.class)
     public void testInstantiationException() throws Exception {
-        ExceptionTester tester = new ExceptionTester();
-        tester.testConstructor(InstantiationExceptionTest.class, new Class<?>[0], new Object[0]);
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.test(InstantiationExceptionTest.class, new Class<?>[0], new Object[0]);
     }
     
     @Test
     public void testAllLenient() throws Exception {
-        ExceptionTester tester = new ExceptionTester();
+        ConstructorsTester tester = new ConstructorsTester();
         tester.testAllConstructors(LenientExceptionTest.class, true);
     }
     
     @Test(expected=AssertionError.class)
     public void testAllLenientException() throws Exception {
-        ExceptionTester tester = new ExceptionTester();
-        tester.testAllConstructors(LenientExceptionTest.class);
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.testAll(LenientExceptionTest.class);
     }
 
     @SuppressWarnings("all")
