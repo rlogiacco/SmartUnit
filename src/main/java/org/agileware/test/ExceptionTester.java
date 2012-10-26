@@ -73,7 +73,7 @@ public class ExceptionTester extends AbstractTester {
 	}
 
 	private Collection<Field> listInherithed(Class<?> orig, Class<?> type, Collection<Field> fields) {
-		if (type == null || type.equals(Object.class)) {
+		if (type.equals(Object.class)) {
 			return fields;
 		} else {
 			for (Field field : type.getDeclaredFields()) {
