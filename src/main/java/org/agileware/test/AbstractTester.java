@@ -80,8 +80,8 @@ public class AbstractTester {
             return mappings.get(type);
         } else if (type.isEnum()) {
             return type.getEnumConstants()[0];
-        } else if (Modifier.isAbstract(type.getModifiers()) || Modifier.isInterface(type.getModifiers())) {
-            return Mockito.mock(type);
+        } else if (Modifier.isAbstract(type.getModifiers())) {
+            return Mockito.mock(type, Mockito.CALLS_REAL_METHODS);
         } else {
             return type.newInstance();
         }

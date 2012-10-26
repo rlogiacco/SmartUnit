@@ -5,26 +5,32 @@ import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class AbstractDelegatingWebDriverTest {
+
+	private static interface TakesScreenshotWebDriver extends WebDriver, TakesScreenshot {
+	}
 
 	private AbstractDelegatingWebDriver mock = mock(AbstractDelegatingWebDriver.class, CALLS_REAL_METHODS);
 
 	@Before
 	public void setUp() {
-		mock.delegate = spy(new HtmlUnitDriver());
-		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, "org.openqa.selenium.firefox.FirefoxDriver");
+		mock.delegate = spy(new HtmlUnitDriver(true));
 	}
 
 	@Test
@@ -41,21 +47,19 @@ public class AbstractDelegatingWebDriverTest {
 	@Test
 	public void testFindElement() {
 		By by = By.id("something");
-		try {
-			mock.findElement(by);
-		} catch (NoSuchElementException nsee) {
-			verify(mock.delegate).findElement(by);
-		}
+		mock.delegate = mock(WebDriver.class);
+		when(mock.delegate.findElement(by)).thenReturn(null);
+		mock.findElement(by);
+		verify(mock.delegate).findElement(by);
+
 	}
 
 	@Test
 	public void testFindElements() {
 		By by = By.id("something");
-		try {
-			mock.findElements(by);
-		} catch (NoSuchElementException nsee) {
-			verify(mock.delegate).findElements(by);
-		}
+		List<WebElement> elements = mock.findElements(by);
+		verify(mock.delegate).findElements(by);
+		assertEquals(0, elements.size());
 	}
 
 	@Test
@@ -120,11 +124,11 @@ public class AbstractDelegatingWebDriverTest {
 
 	@Test
 	public void testExecuteAsyncScript() {
-		try {
-			mock.executeAsyncScript("window.open()");
-		} catch (UnsupportedOperationException uoe) {
-			verify((JavascriptExecutor) mock.delegate).executeAsyncScript("window.open()");
-		}
+		mock.get("http://www.google.com");
+		mock.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
+		mock.executeAsyncScript("window.setTimeout(arguments[arguments.length - 1], 500);");
+		verify((JavascriptExecutor) mock.delegate).executeAsyncScript(
+				"window.setTimeout(arguments[arguments.length - 1], 500);");
 	}
 
 	@Test(expected = WebDriverException.class)
@@ -135,11 +139,9 @@ public class AbstractDelegatingWebDriverTest {
 
 	@Test
 	public void testExecuteScript() {
-		try {
-			mock.executeScript("window.open()");
-		} catch (UnsupportedOperationException uoe) {
-			verify((JavascriptExecutor) mock.delegate).executeScript("window.open()");
-		}
+		mock.get("http://www.google.com");
+		mock.executeScript("window.open('','other')");
+		verify((JavascriptExecutor) mock.delegate).executeScript("window.open('','other')");
 	}
 
 	@Test(expected = WebDriverException.class)
@@ -150,10 +152,10 @@ public class AbstractDelegatingWebDriverTest {
 
 	@Test
 	public void testGetScreenshotAs() {
-		mock.delegate = spy(new FirefoxDriver());
+		mock.delegate = mock(TakesScreenshotWebDriver.class);
 		mock.getScreenshotAs(OutputType.BASE64);
 		mock.delegate.close();
-		verify((FirefoxDriver) mock.delegate).getScreenshotAs(OutputType.BASE64);
+		verify((TakesScreenshot) mock.delegate).getScreenshotAs(OutputType.BASE64);
 	}
 
 	@Test(expected = WebDriverException.class)

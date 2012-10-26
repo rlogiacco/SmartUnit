@@ -5,7 +5,7 @@
     <constructor-arg ref="delegate" />
   </bean>
 
-  <bean id="delegate" class="org.openqa.selenium.chrome.ChromeDriver">
+  <bean id="delegate" class="org.openqa.selenium.firefox.FirefoxDriver">
     <!-- capabilities can be set here -->
   </bean>
 </beans>

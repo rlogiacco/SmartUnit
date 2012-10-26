@@ -225,18 +225,30 @@ public class BeanPropertiesTester extends AbstractTester {
             Object value = this.getInstance(field.getType());
             setter.invoke(instance, value);
             TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
+            if (!field.getType().isPrimitive()) {
+            	setter.invoke(instance, field.getType().cast(null));
+            	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
+            }
         } else {
             if (setter != null) {
                 Object value = this.getInstance(field.getType());
-                setter.invoke(instance, value);
                 field.setAccessible(true);
+                setter.invoke(instance, value);
                 TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
+                if (!field.getType().isPrimitive()) {
+                	setter.invoke(instance, field.getType().cast(null));
+                	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, field.get(instance));
+                }
             }
             if (getter != null) {
                 Object value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 field.set(instance, value);
                 TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
+                if (!field.getType().isPrimitive()) {
+                	field.set(instance, null);
+                	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
+                }
             }
         }
     }

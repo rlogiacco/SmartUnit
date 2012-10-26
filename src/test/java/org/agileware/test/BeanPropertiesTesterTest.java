@@ -1,11 +1,16 @@
 package org.agileware.test;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +18,7 @@ import java.util.Set;
 
 import junit.framework.AssertionFailedError;
 
-import org.agileware.test.BeanPropertiesTester;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class BeanPropertiesTesterTest {
@@ -51,7 +56,15 @@ public class BeanPropertiesTesterTest {
     @Test
     public void testPartial() throws Exception {
         BeanPropertiesTester tester = new BeanPropertiesTester();
+        Partial mock = spy(new Partial());
+        tester.addMapping(Partial.class, mock);
         tester.testAllProperties(Partial.class);
+        verify(mock, times(2)).getGetter();
+        verify(mock, times(2)).setSetter(any(Object.class));
+        verify(mock, times(1)).getGetterInt();
+        verify(mock, times(1)).setSetterInt(anyInt());
+        verify(mock, times(0)).getNonMatching();
+        verify(mock, times(0)).setNonMatchingInt(anyInt());
     }
 
     @Test
@@ -77,7 +90,7 @@ public class BeanPropertiesTesterTest {
         tester.testProperty(Partial.class, "getter", new String());
         verify(partial, times(0)).getGetter();
     }
-
+    
     @Test
     public void testExcludeByType() throws Exception {
         BeanPropertiesTester tester = new BeanPropertiesTester();
@@ -97,8 +110,8 @@ public class BeanPropertiesTesterTest {
         verify(inherited, times(0)).setInherited(any(Boolean.class));
         verify(inherited, times(0)).getAString();
         verify(inherited, times(0)).setAString(any(String.class));
-        verify(inherited).getAnotherString();
-        verify(inherited).setAnotherString(any(String.class));
+        verify(inherited, times(2)).getAnotherString();
+        verify(inherited, times(2)).setAnotherString(any(String.class));
     }
 
     @Test
@@ -107,12 +120,12 @@ public class BeanPropertiesTesterTest {
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.testAllProperties(Inherited.class, false);
-        verify(inherited).getInherited();
-        verify(inherited).setInherited(any(Boolean.class));
-        verify(inherited).getAString();
-        verify(inherited).setAString(any(String.class));
-        verify(inherited).getAnotherString();
-        verify(inherited).setAnotherString(any(String.class));
+        verify(inherited, times(2)).getInherited();
+        verify(inherited, times(2)).setInherited(any(Boolean.class));
+        verify(inherited, times(2)).getAString();
+        verify(inherited, times(2)).setAString(any(String.class));
+        verify(inherited, times(2)).getAnotherString();
+        verify(inherited, times(2)).setAnotherString(any(String.class));
     }
 
     @Test
@@ -138,8 +151,8 @@ public class BeanPropertiesTesterTest {
         tester.testAllProperties(Inherited.class);
         verify(inherited, times(0)).isMappedProperty();
         verify(inherited, times(0)).setMappedProperty(any(Boolean.class));
-        verify(inherited).getMappedString();
-        verify(inherited).setMappedString(any(String.class));
+        verify(inherited, times(2)).getMappedString();
+        verify(inherited, times(2)).setMappedString(any(String.class));
         verify(inherited, times(0)).setMappedAgain(any(String.class));
     }
 
@@ -167,10 +180,10 @@ public class BeanPropertiesTesterTest {
                 new String[] { "#inherited", "mappedProperty" }, 
                 new String[] { "anotherString", "mappedString" });
         tester.testAllProperties(Inherited.class, false);
-        verify(inherited).isMappedProperty();
-        verify(inherited).setMappedProperty(any(Boolean.class));
-        verify(inherited).getMappedString();
-        verify(inherited).setMappedString(any(String.class));
+        verify(inherited, times(2)).isMappedProperty();
+        verify(inherited, times(2)).setMappedProperty(any(Boolean.class));
+        verify(inherited, times(2)).getMappedString();
+        verify(inherited, times(2)).setMappedString(any(String.class));
         verify(inherited, times(0)).setMappedAgain(any(String.class));
     }
     
@@ -182,9 +195,9 @@ public class BeanPropertiesTesterTest {
         tester.setNameMappings(
                 new String[] { "#inherited", "mappedProperty", "mappedPropertyAgain", "nonExisting"});
         tester.testAllProperties(Inherited.class, false);
-        verify(inherited).isMappedProperty();
-        verify(inherited).setMappedProperty(any(Boolean.class));
-        verify(inherited).setMappedPropertyAgain(any(Boolean.class));
+        verify(inherited, times(2)).isMappedProperty();
+        verify(inherited, times(2)).setMappedProperty(any(Boolean.class));
+        verify(inherited, times(2)).setMappedPropertyAgain(any(Boolean.class));
     }
     
     @Test
@@ -198,9 +211,9 @@ public class BeanPropertiesTesterTest {
         tester.testAllProperties(Inherited.class);
         verify(inherited, times(0)).isMappedProperty();
         verify(inherited, times(0)).setMappedProperty(any(Boolean.class));
-        verify(inherited).getMappedString();
-        verify(inherited).setMappedString(any(String.class));
-        verify(inherited).setMappedAgain(any(String.class));
+        verify(inherited, times(2)).getMappedString();
+        verify(inherited, times(2)).setMappedString(any(String.class));
+        verify(inherited, times(2)).setMappedAgain(any(String.class));
     }
     
     @Test(expected=AssertionFailedError.class)
@@ -226,17 +239,23 @@ public class BeanPropertiesTesterTest {
         private double aDouble;
         private String aString;
         private Object anObject;
-        private Collection<?> aCollection;
-        private List<?> aList;
-        private Map<?, ?> aMap;
+        private Collection<Object> aCollection;
+        private List<String> aList;
+        private Map<String, Date> aMap;
         private Set<?> aSet;
         private Abstract abstractType;
         private Interface interfaceType;
         private Thread thread;
+        private Runnable runnable;
+        private Date date;
+        private Time time;
+        private Timestamp timestamp;
+        private java.util.Date utilDate;
+        private java.util.Calendar calendar;
 
         protected Boolean inherited;
-
-        public boolean isABoolean() {
+        
+		public boolean isABoolean() {
             return aBoolean;
         }
 
@@ -316,27 +335,27 @@ public class BeanPropertiesTesterTest {
             this.anObject = anObject;
         }
 
-        public Collection<?> getACollection() {
+        public Collection<Object> getACollection() {
             return aCollection;
         }
 
-        public void setACollection(Collection<?> aCollection) {
+        public void setACollection(Collection<Object> aCollection) {
             this.aCollection = aCollection;
         }
 
-        public List<?> getAList() {
+        public List<String> getAList() {
             return aList;
         }
 
-        public void setAList(List<?> aList) {
+        public void setAList(List<String> aList) {
             this.aList = aList;
         }
 
-        public Map<?, ?> getAMap() {
+        public Map<String, Date> getAMap() {
             return aMap;
         }
 
-        public void setAMap(Map<?, ?> aMap) {
+        public void setAMap(Map<String, Date> aMap) {
             this.aMap = aMap;
         }
 
@@ -371,6 +390,54 @@ public class BeanPropertiesTesterTest {
         public void setThread(Thread thread) {
             this.thread = thread;
         }
+        
+        public Runnable getRunnable() {
+			return runnable;
+		}
+
+		public void setRunnable(Runnable runnable) {
+			this.runnable = runnable;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public void setDate(Date date) {
+			this.date = date;
+		}
+
+		public Time getTime() {
+			return time;
+		}
+
+		public void setTime(Time time) {
+			this.time = time;
+		}
+
+		public Timestamp getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(Timestamp timestamp) {
+			this.timestamp = timestamp;
+		}
+
+		public java.util.Date getUtilDate() {
+			return utilDate;
+		}
+
+		public void setUtilDate(java.util.Date utilDate) {
+			this.utilDate = utilDate;
+		}
+
+		public java.util.Calendar getCalendar() {
+			return calendar;
+		}
+
+		public void setCalendar(java.util.Calendar calendar) {
+			this.calendar = calendar;
+		}
 
         public Boolean getInherited() {
             return inherited;
@@ -406,6 +473,11 @@ public class BeanPropertiesTesterTest {
         public String getAString() {
             return super.getAString();
         }
+        
+        @Override
+        public void setThread(Thread inherited) {
+            super.setThread(inherited);
+        }
 
         public Boolean isMappedProperty() {
             return inherited;
@@ -435,20 +507,35 @@ public class BeanPropertiesTesterTest {
     @SuppressWarnings("unused")
     public static class Partial {
         private Object getter;
+        private int getterInt;
         private Object setter;
+        private int setterInt;
         private Object field;
         private String nonMatching;
+        private int nonMatchingInt;
 
         public Object getGetter() {
             return getter;
+        }
+        
+        public int getGetterInt() {
+            return getterInt;
         }
 
         public void setSetter(Object value) {
             setter = value;
         }
+        
+        public void setSetterInt(int value) {
+            setterInt = value;
+        }
 
         public Object getNonMatching() {
             return nonMatching;
+        }
+        
+        public void setNonMatchingInt(float value) {
+            nonMatchingInt = (int)value;
         }
     }
 
@@ -457,10 +544,21 @@ public class BeanPropertiesTesterTest {
     }
 
     public static abstract class Abstract {
+    	private boolean property;
+
+		public boolean isProperty() {
+			return property;
+		}
+
+		public void setProperty(boolean property) {
+			this.property = property;
+		}
 
     }
 
     public static interface Interface {
+		public int getProperty();
 
+		public void setProperty(int property);
     }
 }

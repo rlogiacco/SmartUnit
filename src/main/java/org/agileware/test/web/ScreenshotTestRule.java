@@ -20,9 +20,9 @@ import org.openqa.selenium.WebDriver;
 public class ScreenshotTestRule implements TestRule {
 	public static final String DEFAULT_OUTPUT_FOLDER = "target/surefire-reports/";
 
-	private WebDriver driver;
+	protected WebDriver driver;
 
-	private String outputFolder;
+	protected String outputFolder;
 
 	/**
 	 * @param driver
@@ -71,7 +71,8 @@ public class ScreenshotTestRule implements TestRule {
 	 */
 	private void capture(String method) {
 		try {
-			FileOutputStream out = new FileOutputStream(outputFolder + "screenshot-" + method + ".png");
+			File target = new File(outputFolder, "screenshot-" + method + ".png");
+			FileOutputStream out = new FileOutputStream(target);
 			out.write(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
 			out.close();
 		} catch (Exception e) {

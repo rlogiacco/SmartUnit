@@ -78,8 +78,7 @@ import org.openqa.selenium.WebDriverException;
  * 
  */
 public class SharedWebDriver extends AbstractDelegatingWebDriver {
-	public final static String SELENIUM_DRIVER_PROPERTY = "selenium.driver";
-	public final static String SELENIUM_DRIVER_CAPABILITIES_PROPERTY = "selenium.driver.capabilities";
+	public static final String SELENIUM_DRIVER_PROPERTY = "selenium.driver";
 
 	private static SharedWebDriver instance;
 
@@ -87,9 +86,7 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				if (instance != null && instance.delegate != null) {
-					instance.delegate.quit();
-				}
+				SharedWebDriver.destroy();
 			}
 		});
 	}
