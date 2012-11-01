@@ -6,7 +6,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
@@ -18,7 +17,6 @@ import java.util.Set;
 
 import junit.framework.AssertionFailedError;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class PropertiesTesterTest {

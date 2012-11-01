@@ -1,21 +1,22 @@
-/**
- * 
- */
 package org.agileware.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 
 /**
  * This is a utility class to test exception constructors
  * 
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ * @author Sebastien Le Callonnec <slc_ie@yahoo.ie>
  * 
  */
 public class ConstructorsTester extends AbstractTester {
@@ -31,6 +32,25 @@ public class ConstructorsTester extends AbstractTester {
 				params.add(this.getInstance(paramType));
 			}
 			this.test(type, constructor.getParameterTypes(), params.toArray(), lenient);
+		}
+	}
+	
+	/**
+	 * Check that only constructor is provided, and that it is private.  This
+	 * is particularly useful to ensure classes that only provide static 
+	 * methods cannot be instantiated.
+	 * 
+	 * @param type - Class under test.
+	 * @exception Exception - If anything goes wrong.
+	 */
+	public void testConstructorIsPrivate(Class<?> type) throws Exception {
+		Constructor<?>[] constructors = type.getDeclaredConstructors();
+		assertNotNull(constructors);
+		assertEquals(1, constructors.length);
+
+		Constructor<?> theConstructor = constructors[0];
+		if ((theConstructor.getModifiers() & Modifier.PRIVATE) != Modifier.PRIVATE) {
+			throw new AssertionError(String.format("Expected %s ctor to be private.", type.getName()));
 		}
 	}
 	
@@ -83,4 +103,6 @@ public class ConstructorsTester extends AbstractTester {
 			return listInherithed(orig, type.getSuperclass(), fields);
 		}
 	}
+	
+	
 }
