@@ -42,6 +42,18 @@ public class ConstructorsTesterTest {
         ConstructorsTester tester = new ConstructorsTester();
         tester.testAll(LenientExceptionTest.class);
     }
+    
+    @Test(expected=AssertionError.class)
+    public void testConstructorNotPrivateShouldFail() throws Exception {
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.testConstructorIsPrivate(InvocationTargetExceptionTest.class);
+    }
+    
+    @Test
+    public void testConstructorPrivateShouldPass() throws Exception {
+        ConstructorsTester tester = new ConstructorsTester();
+        tester.testConstructorIsPrivate(PriveConstructorClass.class);
+    }
 
     @SuppressWarnings("all")
     public static class TestException extends Exception {
@@ -98,6 +110,12 @@ public class ConstructorsTesterTest {
     public static class LenientExceptionTest extends Exception {
         public LenientExceptionTest(Date date) {
             // the date is not stored
+        }
+    }
+    
+    @SuppressWarnings("all")
+    public static class PriveConstructorClass extends Exception {
+        private PriveConstructorClass() {
         }
     }
 }
