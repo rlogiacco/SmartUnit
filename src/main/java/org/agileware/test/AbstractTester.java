@@ -21,69 +21,246 @@ import org.mockito.Mockito;
 
 public class AbstractTester {
 
-    protected Map<Class<?>, Object> mappings = new HashMap<Class<?>, Object>();
-    
-    public AbstractTester() {
-        // primitives
-        mappings.put(boolean.class, new Boolean(true));
-        mappings.put(byte.class, new Byte(Byte.MAX_VALUE));
-        mappings.put(char.class, new Character(Character.MAX_VALUE));
-        mappings.put(short.class, new Short(Short.MAX_VALUE));
-        mappings.put(int.class, new Integer(Integer.MAX_VALUE));
-        mappings.put(long.class, new Long(Long.MAX_VALUE));
-        mappings.put(float.class, new Float(Float.MAX_VALUE));
-        mappings.put(double.class, new Double(Double.MAX_VALUE));
-        // wrappers
-        mappings.put(Boolean.class, new Boolean(true));
-        mappings.put(Byte.class, new Byte(Byte.MAX_VALUE));
-        mappings.put(Character.class, new Character(Character.MAX_VALUE));
-        mappings.put(Short.class, new Short(Short.MAX_VALUE));
-        mappings.put(Integer.class, new Integer(Integer.MAX_VALUE));
-        mappings.put(Long.class, new Long(Long.MAX_VALUE));
-        mappings.put(Float.class, new Float(Float.MAX_VALUE));
-        mappings.put(Double.class, new Double(Double.MAX_VALUE));
-        // collections
-        mappings.put(Collection.class, new ArrayList<Object>());
-        mappings.put(List.class, new ArrayList<Object>());
-        mappings.put(Set.class, new HashSet<Object>());
-        mappings.put(SortedSet.class, new TreeSet<Object>());
-        mappings.put(Map.class, new HashMap<Object, Object>());
-        mappings.put(SortedMap.class, new TreeMap<Object, Object>());
-        // date & time
-        mappings.put(Date.class, new Date(System.currentTimeMillis()));
-        mappings.put(Time.class, new Time(System.currentTimeMillis()));
-        mappings.put(Timestamp.class, new Timestamp(System.currentTimeMillis()));
-        // others
-        mappings.put(Runnable.class, new Thread());
-        mappings.put(Thread.class, new Thread());
-        mappings.put(Locale.class, Locale.getDefault());
-    }
+	protected Map<Class<?>, ValueBuilder<?>> mappings = new HashMap<Class<?>, ValueBuilder<?>>();
 
-    /**
-     * Add a type mapping to instruct the tester how a certain type should be
-     * instantiated. If your bean uses interfaces to define properties than all
-     * interfaces should be added to the mappings before testing the property
-     * otherwise instantion exceptions will be thrown.
-     * 
-     * @param type
-     *            the type you want to map
-     * @param value
-     *            the value that will be used to valorize/check fields
-     */
-    public void addMapping(Class<?> type, Object value) {
-        mappings.put(type, value);
-    }
+	public AbstractTester() {
+		// primitives
+		mappings.put(boolean.class, new ValueBuilder<Boolean>() {
 
-    protected Object getInstance(final Class<?> type)
-            throws InstantiationException, IllegalAccessException {
-        if (mappings.containsKey(type)) {
-            return mappings.get(type);
-        } else if (type.isEnum()) {
-            return type.getEnumConstants()[0];
-        } else if (Modifier.isAbstract(type.getModifiers())) {
-            return Mockito.mock(type, Mockito.CALLS_REAL_METHODS);
-        } else {
-            return type.newInstance();
-        }
-    }
+			public Boolean build() {
+				return new Boolean((Math.random() * 100 % 2) == 0);
+			}
+
+		});
+		mappings.put(Boolean.class, new ValueBuilder<Boolean>() {
+
+			public Boolean build() {
+				return new Boolean((Math.random() * 100 % 2) == 0);
+			}
+
+		});
+		mappings.put(byte.class, new ValueBuilder<Byte>() {
+
+			public Byte build() {
+				return new Byte((byte) (Math.random() * Byte.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Byte.class, new ValueBuilder<Byte>() {
+
+			public Byte build() {
+				return new Byte((byte) (Math.random() * Byte.MAX_VALUE));
+			}
+
+		});
+		mappings.put(char.class, new ValueBuilder<Character>() {
+
+			public Character build() {
+				return new Character((char) (Math.random() * Character.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Character.class, new ValueBuilder<Character>() {
+
+			public Character build() {
+				return new Character((char) (Math.random() * Character.MAX_VALUE));
+			}
+
+		});
+		mappings.put(short.class, new ValueBuilder<Short>() {
+
+			public Short build() {
+				return new Short((short) (Math.random() * Short.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Short.class, new ValueBuilder<Short>() {
+
+			public Short build() {
+				return new Short((short) (Math.random() * Short.MAX_VALUE));
+			}
+
+		});
+		mappings.put(int.class, new ValueBuilder<Integer>() {
+
+			public Integer build() {
+				return new Integer((int) (Math.random() * Integer.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Integer.class, new ValueBuilder<Integer>() {
+
+			public Integer build() {
+				return new Integer((int) (Math.random() * Integer.MAX_VALUE));
+			}
+
+		});
+		mappings.put(long.class, new ValueBuilder<Long>() {
+
+			public Long build() {
+				return new Long((long) (Math.random() * Long.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Long.class, new ValueBuilder<Long>() {
+
+			public Long build() {
+				return new Long((long) (Math.random() * Long.MAX_VALUE));
+			}
+
+		});
+		mappings.put(float.class, new ValueBuilder<Float>() {
+
+			public Float build() {
+				return new Float((float) (Math.random() * Float.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Float.class, new ValueBuilder<Float>() {
+
+			public Float build() {
+				return new Float((float) (Math.random() * Float.MAX_VALUE));
+			}
+
+		});
+		mappings.put(double.class, new ValueBuilder<Double>() {
+
+			public Double build() {
+				return new Double((double) (Math.random() * Double.MAX_VALUE));
+			}
+
+		});
+		mappings.put(Double.class, new ValueBuilder<Double>() {
+
+			public Double build() {
+				return new Double((double) (Math.random() * Double.MAX_VALUE));
+			}
+
+		});
+		// collections
+		mappings.put(Collection.class, new ValueBuilder<Collection<?>>() {
+
+			public Collection<?> build() {
+				return new ArrayList<Object>();
+			}
+
+		});
+		mappings.put(List.class, new ValueBuilder<List<?>>() {
+
+			public List<?> build() {
+				return new ArrayList<Object>();
+			}
+
+		});
+		mappings.put(Set.class, new ValueBuilder<Set<?>>() {
+
+			public Set<?> build() {
+				return new HashSet<Object>();
+			}
+
+		});
+		mappings.put(SortedSet.class, new ValueBuilder<SortedSet<?>>() {
+
+			public SortedSet<?> build() {
+				return new TreeSet<Object>();
+			}
+
+		});
+		mappings.put(Map.class, new ValueBuilder<Map<?, ?>>() {
+
+			public Map<?, ?> build() {
+				return new HashMap<Object, Object>();
+			}
+
+		});
+		mappings.put(SortedMap.class, new ValueBuilder<SortedMap<?, ?>>() {
+
+			public SortedMap<?, ?> build() {
+				return new TreeMap<Object, Object>();
+			}
+
+		});
+		// date & time
+		mappings.put(Date.class, new ValueBuilder<Date>() {
+
+			public Date build() {
+				return new Date(System.currentTimeMillis());
+			}
+
+		});
+		mappings.put(Time.class, new ValueBuilder<Time>() {
+
+			public Time build() {
+				return new Time(System.currentTimeMillis());
+			}
+
+		});
+		mappings.put(Timestamp.class, new ValueBuilder<Timestamp>() {
+
+			public Timestamp build() {
+				return new Timestamp(System.currentTimeMillis());
+			}
+
+		});
+		// others
+		mappings.put(Runnable.class, new ValueBuilder<Runnable>() {
+
+			public Runnable build() {
+				return new Thread();
+			}
+
+		});
+		mappings.put(Thread.class, new ValueBuilder<Thread>() {
+
+			public Thread build() {
+				return new Thread();
+			}
+
+		});
+		mappings.put(Locale.class, new ValueBuilder<Locale>() {
+
+			public Locale build() {
+
+				return Locale.getAvailableLocales()[(int) (Math.random() * Locale.getAvailableLocales().length)];
+			}
+
+		});
+	}
+
+	/**
+	 * Add a type mapping to instruct the tester how a certain type should be
+	 * instantiated. If your bean uses interfaces to define properties than all
+	 * interfaces should be added to the mappings before testing the property
+	 * otherwise instantion exceptions will be thrown.
+	 * 
+	 * @param type
+	 *            the type you want to map
+	 * @param value
+	 *            the value that will be used to valorize/check fields
+	 */
+	public void addMapping(Class<?> type, final Object value) {
+		mappings.put(type, new ValueBuilder<Object>() {
+
+			public Object build() {
+				return value;
+			}
+
+		});
+	}
+
+	public void addMapping(Class<?> type, ValueBuilder<Object> builder) {
+		mappings.put(type, builder);
+	}
+
+	protected Object getInstance(final Class<?> type) throws InstantiationException, IllegalAccessException {
+		if (mappings.containsKey(type)) {
+			return mappings.get(type).build();
+		} else if (type.isEnum()) {
+			return type.getEnumConstants()[(int) (Math.random() * type.getEnumConstants().length)];
+		} else if (Modifier.isAbstract(type.getModifiers())) {
+			return Mockito.mock(type, Mockito.CALLS_REAL_METHODS);
+		} else {
+			return type.newInstance();
+		}
+	}
 }

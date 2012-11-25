@@ -20,7 +20,7 @@ public class AbstractTesterTest {
         tester.addMapping(Type.class, new Type());
         assertTrue(tester.mappings.containsKey(Type.class));
         assertNotNull(tester.mappings.get(Type.class));
-        assertTrue(tester.mappings.get(Type.class) instanceof Type);
+        assertTrue(tester.mappings.get(Type.class).build() instanceof Type);
     }
 
     @Test

@@ -111,6 +111,12 @@
           </execution>
         </executions>
       </plugin>
+	  <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <releaseProfiles>ie,chrome,firefox</releaseProfiles>
+        </configuration>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
