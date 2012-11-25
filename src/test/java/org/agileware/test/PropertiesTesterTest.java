@@ -224,6 +224,24 @@ public class PropertiesTesterTest {
                 new String[] { "anotherString"});
         tester.testAll(Inherited.class);
     }
+    
+    @Test(expected=AssertionFailedError.class)
+    public void testTypo() throws Exception {
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(Typo.class);
+    }
+    
+    @Test
+    public void testBuilderMapping() throws Exception {
+        PropertiesTester tester = new PropertiesTester();
+        tester.addMapping(Simple.class, new ValueBuilder<Simple>() {
+			
+			public Simple build() {
+				return new Simple();
+			}
+		});
+        tester.testAll(Simple.class);
+    }
 
     public static class Simple {
 
@@ -558,5 +576,20 @@ public class PropertiesTesterTest {
 		public int getProperty();
 
 		public void setProperty(int property);
+    }
+    
+    public static class Typo {
+    	
+    	private Object first;
+    	
+    	private Object second;
+    	
+    	public Object getFirst() {
+    		return first;
+    	}
+    	
+    	public Object getSecond() {
+    		return first;
+    	}
     }
 }

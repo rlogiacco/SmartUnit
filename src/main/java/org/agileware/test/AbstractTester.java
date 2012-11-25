@@ -261,7 +261,7 @@ public class AbstractTester {
 	 *            a <code>ValueBuilder</code> implementation capable of
 	 *            generating pseudo-random instances of the given type.
 	 */
-	public void addMapping(Class<?> type, ValueBuilder<Object> builder) {
+	public void addMapping(Class<?> type, ValueBuilder<?> builder) {
 		mappings.put(type, builder);
 	}
 
