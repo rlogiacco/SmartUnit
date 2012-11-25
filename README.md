@@ -6,7 +6,7 @@ SmartUnit artifacts, including sources and javadocs, are available on the centra
 <dependency>
   <groupId>org.agileware</groupId>
   <artifactId>smartunit</artifactId>
-  <version>0.6.0</version>
+  <version>0.8.0</version>
   <scope>test</scope>
 </dependency>
 ```
