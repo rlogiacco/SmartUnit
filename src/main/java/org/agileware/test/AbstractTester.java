@@ -228,10 +228,10 @@ public class AbstractTester {
 	}
 
 	/**
-	 * Add a type mapping to instruct the tester how a certain type should be
-	 * instantiated. If your bean uses interfaces to define properties than all
+	 * Adds a type mapping to instruct the tester how a certain type should be
+	 * mapped. If your bean uses interfaces to define properties than all
 	 * interfaces should be added to the mappings before testing the property
-	 * otherwise instantion exceptions will be thrown.
+	 * otherwise instantiation exceptions will be thrown.
 	 * 
 	 * @param type
 	 *            the type you want to map
@@ -248,6 +248,19 @@ public class AbstractTester {
 		});
 	}
 
+	/**
+	 * Adds a type mapping to instruct the tester how a certain type should be
+	 * instantiated. This is the preferred method for type mapping because
+	 * ensures maximum test stability. If your bean uses interfaces to define
+	 * properties than all interfaces should be added to the mappings before
+	 * testing the property otherwise instantiation exceptions will be thrown.
+	 * 
+	 * @param type
+	 *            the type you want to map
+	 * @param builder
+	 *            a <code>ValueBuilder</code> implementation capable of
+	 *            generating pseudo-random instances of the given type.
+	 */
 	public void addMapping(Class<?> type, ValueBuilder<Object> builder) {
 		mappings.put(type, builder);
 	}
