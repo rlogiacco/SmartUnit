@@ -3,12 +3,16 @@
  */
 package org.agileware.test.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -56,14 +60,28 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 	 * @see org.openqa.selenium.WebDriver#findElement(org.openqa.selenium.By)
 	 */
 	public WebElement findElement(By by) {
-		return delegate.findElement(by);
+		try {
+			return new DelegatingWebElement(delegate.findElement(by));
+		} catch (NoSuchElementException nsee) {
+			nsee.addInfo("Find clause", by.toString());
+			throw nsee;
+		}
 	}
 
 	/**
 	 * @see org.openqa.selenium.WebDriver#findElements(org.openqa.selenium.By)
 	 */
 	public List<WebElement> findElements(By by) {
-		return delegate.findElements(by);
+		try {
+			List<WebElement> results = new ArrayList<WebElement>();
+			for (WebElement webElement : delegate.findElements(by)) {
+				results.add(new DelegatingWebElement(webElement));
+			}
+			return results;
+		} catch (NoSuchElementException nsee) {
+			nsee.addInfo("Find clause", by.toString());
+			throw nsee;
+		}
 	}
 
 	/**
@@ -144,7 +162,8 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 		try {
 			return ((JavascriptExecutor) delegate).executeAsyncScript(script, args);
 		} catch (ClassCastException cce) {
-			throw new WebDriverException("Delegate implementation `" + delegate.getClass() + "` does not support this feature");
+			throw new WebDriverException("Delegate implementation `" + delegate.getClass()
+					+ "` does not support this feature");
 		}
 	}
 
@@ -156,7 +175,8 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 		try {
 			return ((JavascriptExecutor) delegate).executeScript(script, args);
 		} catch (ClassCastException cce) {
-			throw new WebDriverException("Delegate implementation `" + delegate.getClass() + "` does not support this feature");
+			throw new WebDriverException("Delegate implementation `" + delegate.getClass()
+					+ "` does not support this feature");
 		}
 	}
 
@@ -167,8 +187,87 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 		try {
 			return ((TakesScreenshot) delegate).getScreenshotAs(target);
 		} catch (ClassCastException cce) {
-			throw new WebDriverException("Delegate implementation `" + delegate.getClass() + "` does not support this feature");
+			throw new WebDriverException("Delegate implementation `" + delegate.getClass()
+					+ "` does not support this feature");
 		}
 	}
-	
+
+	private class DelegatingWebElement implements WebElement {
+		
+		private WebElement delegate;
+
+		public DelegatingWebElement(WebElement delegate) {
+			this.delegate = delegate;
+		}
+		
+		public void click() {
+			delegate.click();
+		}
+
+		public void submit() {
+			delegate.submit();
+		}
+
+		public void sendKeys(CharSequence... keysToSend) {
+			delegate.sendKeys(keysToSend);
+		}
+
+		public void clear() {
+			delegate.clear();
+		}
+
+		public String getTagName() {
+			return delegate.getTagName();
+		}
+
+		public String getAttribute(String name) {
+			return delegate.getAttribute(name);
+		}
+
+		public boolean isSelected() {
+			return delegate.isSelected();
+		}
+
+		public boolean isEnabled() {
+			return delegate.isEnabled();
+		}
+
+		public String getText() {
+			return delegate.getText();
+		}
+
+		public List<WebElement> findElements(By by) {
+			try {
+				return delegate.findElements(by);
+			} catch (NoSuchElementException nsee) {
+				nsee.addInfo("Find clause", by.toString());
+				throw nsee;
+			}
+		}
+
+		public WebElement findElement(By by) {
+			try {
+				return delegate.findElement(by);
+			} catch (NoSuchElementException nsee) {
+				nsee.addInfo("Find clause", by.toString());
+				throw nsee;
+			}
+		}
+
+		public boolean isDisplayed() {
+			return delegate.isDisplayed();
+		}
+
+		public Point getLocation() {
+			return delegate.getLocation();
+		}
+
+		public Dimension getSize() {
+			return delegate.getSize();
+		}
+
+		public String getCssValue(String propertyName) {
+			return delegate.getCssValue(propertyName);
+		}
+	}
 }
