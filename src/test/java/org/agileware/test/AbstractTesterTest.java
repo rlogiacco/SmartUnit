@@ -7,12 +7,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Date;
 
-import org.agileware.test.AbstractTester;
 import org.junit.Test;
 
 public class AbstractTesterTest {
 
-    private AbstractTester tester = new Mock();
+    private AbstractTester<Mock> tester = new Mock();
 
     @Test
     public void testAddMapping() {
@@ -37,7 +36,7 @@ public class AbstractTesterTest {
 
     }
 
-    public static class Mock extends AbstractTester {
+    public static class Mock extends AbstractTester<Mock> {
     }
 
     public static class Type {
