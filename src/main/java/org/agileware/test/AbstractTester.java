@@ -1,5 +1,7 @@
 package org.agileware.test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.sql.Date;
 import java.sql.Time;
@@ -265,7 +267,7 @@ public class AbstractTester {
 		mappings.put(type, builder);
 	}
 
-	protected Object getInstance(final Class<?> type) throws InstantiationException, IllegalAccessException {
+	protected Object getInstance(final Class<?> type) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		if (mappings.containsKey(type)) {
 			return mappings.get(type).build();
 		} else if (type.isEnum()) {
@@ -273,7 +275,9 @@ public class AbstractTester {
 		} else if (Modifier.isAbstract(type.getModifiers())) {
 			return Mockito.mock(type, Mockito.CALLS_REAL_METHODS);
 		} else {
-			return type.newInstance();
+			final Constructor<?> defaultConstructor = type.getDeclaredConstructor();
+			defaultConstructor.setAccessible(true);
+			return defaultConstructor.newInstance();
 		}
 	}
 }
