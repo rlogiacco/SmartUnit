@@ -47,16 +47,16 @@ public class GoogleHome {
 
 	@Then("^the Google home page should be shown$")
 	public void the_google_home_page_should_be_shown() throws Throwable {
-		assertTrue(browser.getCurrentUrl().startsWith("http://www.google"));
+		assertTrue(browser.getCurrentUrl().startsWith("https://www.google"));
 	}
 	
 	@Then("^the Google Ireland home page should be shown$")
 	public void the_google_ireland_home_page_should_be_shown() throws Throwable {
-		assertEquals("http://www.google.ie/", browser.getCurrentUrl());
+		assertEquals("https://www.google.ie/", browser.getCurrentUrl());
 	}
 	
 	@Then("^the Google Italy home page should be shown$")
 	public void the_google_italy_home_page_should_be_shown() throws Throwable {
-		assertEquals("http://www.google.it/", browser.getCurrentUrl());
+		assertEquals("https://www.google.it/", browser.getCurrentUrl());
 	}
 }
