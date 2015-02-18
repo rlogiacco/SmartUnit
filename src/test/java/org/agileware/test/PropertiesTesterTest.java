@@ -21,7 +21,7 @@ import org.junit.Test;
 
 public class PropertiesTesterTest {
 
-    @Test(expected=InstantiationException.class)
+    @Test(expected=NoSuchMethodException.class)
     public void testNonInstantiable() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         tester.testAll(URL.class);
