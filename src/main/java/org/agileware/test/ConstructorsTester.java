@@ -19,12 +19,14 @@ import java.util.List;
  * @author Sebastien Le Callonnec <slc_ie@yahoo.ie>
  * 
  */
-public class ConstructorsTester extends AbstractTester {
+public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 
-	public void testAll(Class<? extends Exception> type) throws Exception {
+	public ConstructorsTester testAll(Class<? extends Exception> type) throws Exception {
 		this.testAllConstructors(type, false);
+		return this;
 	}
-	public void testAllConstructors(Class<? extends Exception> type, boolean lenient) throws Exception {
+
+	public ConstructorsTester testAllConstructors(Class<? extends Exception> type, boolean lenient) throws Exception {
 		Constructor<?>[] constructors = type.getConstructors();
 		for (Constructor<?> constructor : constructors) {
 			List<Object> params = new ArrayList<Object>();
@@ -33,6 +35,7 @@ public class ConstructorsTester extends AbstractTester {
 			}
 			this.test(type, constructor.getParameterTypes(), params.toArray(), lenient);
 		}
+		return this;
 	}
 	
 	/**
@@ -43,7 +46,7 @@ public class ConstructorsTester extends AbstractTester {
 	 * @param type - Class under test.
 	 * @exception Exception - If anything goes wrong.
 	 */
-	public void testConstructorIsPrivate(Class<?> type) throws Exception {
+	public ConstructorsTester testConstructorIsPrivate(Class<?> type) throws Exception {
 		Constructor<?>[] constructors = type.getDeclaredConstructors();
 		assertNotNull(constructors);
 		assertEquals(1, constructors.length);
@@ -52,14 +55,16 @@ public class ConstructorsTester extends AbstractTester {
 		if ((theConstructor.getModifiers() & Modifier.PRIVATE) != Modifier.PRIVATE) {
 			throw new AssertionError(String.format("Expected %s ctor to be private.", type.getName()));
 		}
+		return this;
 	}
 	
 
-	public void test(Class<?> type, Class<?>[] paramTypes, Object[] params) throws Exception {
+	public ConstructorsTester test(Class<?> type, Class<?>[] paramTypes, Object[] params) throws Exception {
 		this.test(type, paramTypes, params, false);
+		return this;
 	}
 
-	public void test(Class<?> type, Class<?>[] paramTypes, Object[] params, boolean lenient) throws Exception {
+	public ConstructorsTester test(Class<?> type, Class<?>[] paramTypes, Object[] params, boolean lenient) throws Exception {
 		assertNotNull(paramTypes);
 		assertNotNull(params);
 		Constructor<?> constructor = type.getConstructor(paramTypes);
@@ -76,6 +81,7 @@ public class ConstructorsTester extends AbstractTester {
 			System.out.println("InvocationTargetException");
 			throw new AssertionError("An exception has been thrown during instantiation: " + ite.getCause());
 		}
+		return this;
 	}
 
 	private void testParameter(Object instance, Class<?> type, Object value, Collection<Field> fields, boolean lenient)

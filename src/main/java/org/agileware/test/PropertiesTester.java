@@ -34,7 +34,7 @@ import org.junit.Assert;
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
  * 
  */
-public class PropertiesTester extends AbstractTester {
+public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Property names exclusion list.
@@ -59,8 +59,9 @@ public class PropertiesTester extends AbstractTester {
      * @param names
      *            the list of property names you want to exclude.
      */
-    public void setNameExclusions(final String... names) {
+    public PropertiesTester setNameExclusions(final String... names) {
         excludesByName = Arrays.asList(names);
+        return this;
     }
 
     /**
@@ -70,8 +71,9 @@ public class PropertiesTester extends AbstractTester {
      * @param types
      *            the list of types you want to be excluded from properties testing.
      */
-    public void setTypeExclusions(final Class<?>... types) {
+    public PropertiesTester setTypeExclusions(final Class<?>... types) {
         excludesByType = Arrays.asList(types);
+        return this;
     }
 
     /**
@@ -103,7 +105,7 @@ public class PropertiesTester extends AbstractTester {
      *            subsequent positions the properties using that field. Multiple properties can be specified for each
      *            mapping and multiple mappings can be set.
      */
-    public void setNameMappings(final String[]... mappings) {
+    public PropertiesTester setNameMappings(final String[]... mappings) {
         for (String[] mapping : mappings) {
             Assert.assertTrue("A mapping is defined by an array of 2 strings minimum", mapping.length > 1);
             Collection<String> properties = nameMappings.get(mapping[0]);
@@ -115,6 +117,7 @@ public class PropertiesTester extends AbstractTester {
                 properties.add(mapping[i]);
             }
         }
+        return this;
     }
 
     /**
@@ -129,8 +132,9 @@ public class PropertiesTester extends AbstractTester {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    public void testAll(Class<?> type) throws Exception {
+    public PropertiesTester testAll(Class<?> type) throws Exception {
         this.testAll(type, true);
+        return this;
     }
 
     /**
@@ -147,7 +151,7 @@ public class PropertiesTester extends AbstractTester {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    public void testAll(Class<?> type, boolean definedOnly) throws Exception {
+    public PropertiesTester testAll(Class<?> type, boolean definedOnly) throws Exception {
         Object instance = this.getInstance(type);
         for (Field field : type.getDeclaredFields()) {
             this.testField(instance, type, field);
@@ -157,6 +161,7 @@ public class PropertiesTester extends AbstractTester {
                 this.testField(instance, type, field);
             }
         }
+        return this;
     }
 
     /**
@@ -171,10 +176,11 @@ public class PropertiesTester extends AbstractTester {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    public void test(Class<?> type, String fieldName, Object value) throws Exception {
+    public PropertiesTester test(Class<?> type, String fieldName, Object value) throws Exception {
         Field field = type.getDeclaredField(fieldName);
         Object instance = this.getInstance(type);
         this.testField(instance, type, field);
+        return this;
     }
 
     /**
@@ -212,8 +218,8 @@ public class PropertiesTester extends AbstractTester {
      *            the class under test.
      * @param field
      *            the field to test.
-     * @param the
-     *            property to test.
+     * @param property
+     *            the property to test.
      * @throws Exception
      *             thrown if any of the tests fail.
      */

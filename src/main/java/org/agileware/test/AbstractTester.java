@@ -1,5 +1,7 @@
 package org.agileware.test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.sql.Date;
 import java.sql.Time;
@@ -19,7 +21,7 @@ import java.util.TreeSet;
 
 import org.mockito.Mockito;
 
-public class AbstractTester {
+public abstract class AbstractTester<T extends AbstractTester<T>> {
 
 	protected Map<Class<?>, ValueBuilder<?>> mappings = new HashMap<Class<?>, ValueBuilder<?>>();
 
@@ -238,7 +240,7 @@ public class AbstractTester {
 	 * @param value
 	 *            the value that will be used to valorize/check fields
 	 */
-	public void addMapping(Class<?> type, final Object value) {
+	public <V, W extends V> T addMapping(Class<V> type, final W value) {
 		mappings.put(type, new ValueBuilder<Object>() {
 
 			public Object build() {
@@ -246,6 +248,7 @@ public class AbstractTester {
 			}
 
 		});
+		return (T) this;
 	}
 
 	/**
@@ -261,11 +264,12 @@ public class AbstractTester {
 	 *            a <code>ValueBuilder</code> implementation capable of
 	 *            generating pseudo-random instances of the given type.
 	 */
-	public void addMapping(Class<?> type, ValueBuilder<?> builder) {
+	public <V, W extends V> T addMapping(Class<V> type, ValueBuilder<W> builder) {
 		mappings.put(type, builder);
+		return (T) this;
 	}
 
-	protected Object getInstance(final Class<?> type) throws InstantiationException, IllegalAccessException {
+	protected Object getInstance(final Class<?> type) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		if (mappings.containsKey(type)) {
 			return mappings.get(type).build();
 		} else if (type.isEnum()) {
@@ -273,7 +277,9 @@ public class AbstractTester {
 		} else if (Modifier.isAbstract(type.getModifiers())) {
 			return Mockito.mock(type, Mockito.CALLS_REAL_METHODS);
 		} else {
-			return type.newInstance();
+			final Constructor<?> defaultConstructor = type.getDeclaredConstructor();
+			defaultConstructor.setAccessible(true);
+			return defaultConstructor.newInstance();
 		}
 	}
 }
