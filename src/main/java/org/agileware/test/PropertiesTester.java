@@ -31,8 +31,6 @@ import org.junit.Assert;
 /**
  * This is a utility class to test bean properties accessor methods.
  * 
- * @author Roberto Lo Giacco rlogiacco@gmail.com
- * 
  */
 public class PropertiesTester extends AbstractTester<PropertiesTester> {
 

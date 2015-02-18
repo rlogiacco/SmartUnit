@@ -34,9 +34,6 @@ import org.openqa.selenium.WebElement;
 /**
  * Abstract base class providing a delegator pattern implementation for Selenium
  * WebDriver implementations.
- * 
- * @author Roberto Lo Giacco rlogiacco@gmail.com
- * 
  */
 public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScreenshot, JavascriptExecutor {
 	/**

@@ -87,10 +87,7 @@ import org.openqa.selenium.WebDriverException;
  *   &lt;bean id="delegate" class="org.openqa.selenium.chrome.ChromeDriver"&gt;
  *     &lt;!-- capabilities can be set here --&gt;
  *   &lt;/bean&gt;
- * </pre> 
- * 
- * @author Roberto Lo Giacco rlogiacco@gmail.com
- * 
+ * </pre>
  */
 public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	public static final String SELENIUM_DRIVER_PROPERTY = "selenium.driver";

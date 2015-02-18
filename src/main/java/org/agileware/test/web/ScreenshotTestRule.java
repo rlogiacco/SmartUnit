@@ -29,9 +29,6 @@ import org.openqa.selenium.WebDriver;
 /**
  * Augments JUnit test suites based on Selenium WebDriver by generating a
  * browser screenshot every time a test failure occurs.
- * 
- * @author Roberto Lo Giacco rlogiacco@gmail.com
- * 
  */
 public class ScreenshotTestRule implements TestRule {
 	public static final String DEFAULT_OUTPUT_FOLDER = "target/surefire-reports/";

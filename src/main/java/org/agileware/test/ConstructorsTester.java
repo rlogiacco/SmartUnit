@@ -29,11 +29,7 @@ import java.util.List;
 
 
 /**
- * This is a utility class to test exception constructors
- * 
- * @author Roberto Lo Giacco rlogiacco@gmail.com
- * @author Sebastien Le Callonnec slc_ie@yahoo.ie
- * 
+ * This is a utility class to mainly test exception constructors.
  */
 public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 
