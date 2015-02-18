@@ -1,5 +1,7 @@
 package org.agileware.test;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.spy;
@@ -26,11 +28,23 @@ public class PropertiesTesterTest {
         PropertiesTester tester = new PropertiesTester();
         tester.testAll(URL.class);
     }
-    
+
     @Test
     public void testClass() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         tester.testAll(Simple.class);
+    }
+
+    @Test
+    public void testNullableParameter() throws Exception {
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(NonnullableParameter.class);
+    }
+
+    @Test
+    public void testNullableParameters() throws Exception {
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(NonnullableParameters.class);
     }
 
     @Test
@@ -70,7 +84,7 @@ public class PropertiesTesterTest {
         PropertiesTester tester = new PropertiesTester();
         tester.test(Partial.class, "field", new String());
     }
-    
+
     @Test
     public void testBooleanProperty() throws Exception {
         PropertiesTester tester = new PropertiesTester();
@@ -88,7 +102,7 @@ public class PropertiesTesterTest {
         tester.test(Partial.class, "getter", new String());
         verify(partial, times(0)).getGetter();
     }
-    
+
     @Test
     public void testExcludeByType() throws Exception {
         PropertiesTester tester = new PropertiesTester();
@@ -131,7 +145,7 @@ public class PropertiesTesterTest {
         PropertiesTester tester = new PropertiesTester();
         tester.testAll(Simple.class, false);
     }
-    
+
     @Test
     public void testInherithedInterface() throws Exception {
         PropertiesTester tester = new PropertiesTester();
@@ -168,14 +182,14 @@ public class PropertiesTesterTest {
         verify(inherited, times(0)).setMappedString(any(String.class));
         verify(inherited, times(0)).setMappedAgain(any(String.class));
     }
-    
+
     @Test
     public void testInheritedPropertiesMappings() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         Inherited inherited = spy(new Inherited());
         tester.addMapping(Inherited.class, inherited);
         tester.setNameMappings(
-                new String[] { "#inherited", "mappedProperty" }, 
+                new String[] { "#inherited", "mappedProperty" },
                 new String[] { "anotherString", "mappedString" });
         tester.testAll(Inherited.class, false);
         verify(inherited, times(2)).isMappedProperty();
@@ -184,7 +198,7 @@ public class PropertiesTesterTest {
         verify(inherited, times(2)).setMappedString(any(String.class));
         verify(inherited, times(0)).setMappedAgain(any(String.class));
     }
-    
+
     @Test
     public void testPropertiesMappingsMultiple() throws Exception {
         PropertiesTester tester = new PropertiesTester();
@@ -197,7 +211,7 @@ public class PropertiesTesterTest {
         verify(inherited, times(2)).setMappedProperty(any(Boolean.class));
         verify(inherited, times(2)).setMappedPropertyAgain(any(Boolean.class));
     }
-    
+
     @Test
     public void testPropertiesMappingsConcatenated() throws Exception {
         PropertiesTester tester = new PropertiesTester();
@@ -213,8 +227,8 @@ public class PropertiesTesterTest {
         verify(inherited, times(2)).setMappedString(any(String.class));
         verify(inherited, times(2)).setMappedAgain(any(String.class));
     }
-    
-    @Test(expected=AssertionFailedError.class)
+
+    @Test(expected=AssertionError.class)
     public void testPropertiesMappingsFailure() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         Inherited inherited = new Inherited();
@@ -224,18 +238,18 @@ public class PropertiesTesterTest {
                 new String[] { "anotherString"});
         tester.testAll(Inherited.class);
     }
-    
-    @Test(expected=AssertionFailedError.class)
+
+    @Test(expected=AssertionError.class)
     public void testTypo() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         tester.testAll(Typo.class);
     }
-    
+
     @Test
     public void testBuilderMapping() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         tester.addMapping(Simple.class, new ValueBuilder<Simple>() {
-			
+
 			public Simple build() {
 				return new Simple();
 			}
@@ -270,7 +284,7 @@ public class PropertiesTesterTest {
         private java.util.Calendar calendar;
 
         protected Boolean inherited;
-        
+
 		public boolean isABoolean() {
             return aBoolean;
         }
@@ -406,7 +420,7 @@ public class PropertiesTesterTest {
         public void setThread(Thread thread) {
             this.thread = thread;
         }
-        
+
         public Runnable getRunnable() {
 			return runnable;
 		}
@@ -462,6 +476,49 @@ public class PropertiesTesterTest {
         public void setInherited(Boolean inherited) {
             this.inherited = inherited;
         }
+
+    }
+
+    public static class NonnullableParameter {
+        private String nonNullableString;
+
+        @Nonnull
+        private String nonNullableString2;
+
+        public String getNonNullableString() {
+            return this.nonNullableString;
+        }
+        public String getNonNullableString2() {
+            return this.nonNullableString2;
+        }
+
+        public void setNonNullableString(@Nonnull String nonNullableString) {
+            if (nonNullableString == null) {
+                throw new NullPointerException("nonNullableString");
+            }
+            this.nonNullableString = nonNullableString;
+        }
+        public void setNonNullableString2(String nonNullableString2) {
+            if (nonNullableString == null) {
+                throw new NullPointerException("nonNullableString");
+            }
+            this.nonNullableString2 = nonNullableString2;
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    public static class NonnullableParameters  {
+        private String nonNullableString;
+        public String getNonNullableString() {
+            return this.nonNullableString;
+        }
+
+        public void setNonNullableString(String nonNullableString) {
+            if (nonNullableString == null) {
+                throw new NullPointerException("nonNullableString");
+            }
+            this.nonNullableString = nonNullableString;
+        }
     }
 
     public static class Inherited extends Simple {
@@ -489,7 +546,7 @@ public class PropertiesTesterTest {
         public String getAString() {
             return super.getAString();
         }
-        
+
         @Override
         public void setThread(Thread inherited) {
             super.setThread(inherited);
@@ -533,7 +590,7 @@ public class PropertiesTesterTest {
         public Object getGetter() {
             return getter;
         }
-        
+
         public int getGetterInt() {
             return getterInt;
         }
@@ -541,7 +598,7 @@ public class PropertiesTesterTest {
         public void setSetter(Object value) {
             setter = value;
         }
-        
+
         public void setSetterInt(int value) {
             setterInt = value;
         }
@@ -549,7 +606,7 @@ public class PropertiesTesterTest {
         public Object getNonMatching() {
             return nonMatching;
         }
-        
+
         public void setNonMatchingInt(float value) {
             nonMatchingInt = (int)value;
         }
@@ -577,17 +634,17 @@ public class PropertiesTesterTest {
 
 		public void setProperty(int property);
     }
-    
+
     public static class Typo {
-    	
+
     	private Object first;
-    	
+
     	private Object second;
-    	
+
     	public Object getFirst() {
     		return first;
     	}
-    	
+
     	public Object getSecond() {
     		return first;
     	}

@@ -16,6 +16,7 @@ package org.agileware.test;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -26,16 +27,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.junit.Assert;
 
 /**
  * This is a utility class to test bean properties accessor methods.
- * 
+ *
  * @author Roberto Lo Giacco <rlogiacco@gmail.com>
- * 
+ *
  */
 public class PropertiesTester extends AbstractTester<PropertiesTester> {
+
+    private static boolean handleJSR305;
+
+    static {
+        try {
+            handleJSR305 = Nonnull.class.getClass() != null;
+        } catch (Throwable t) {
+            handleJSR305 = false;
+        }
+    }
 
     /**
      * Property names exclusion list.
@@ -56,7 +68,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      * Sets a list of properties you want to exclude by name. Use this feature whenever you want to exclude some
      * specific property from the testing. If you need to exclude multiple properties because because you can't provide
      * an instance for the property type consider using <code>setTypeExclusions</code> instead.
-     * 
+     *
      * @param names
      *            the list of property names you want to exclude.
      */
@@ -68,7 +80,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
     /**
      * Sets the list of property types that are not going to be tested. Use this feature whenever your class uses some
      * type you can't provide an instance for.
-     * 
+     *
      * @param types
      *            the list of types you want to be excluded from properties testing.
      */
@@ -80,27 +92,27 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
     /**
      * Sets the properties mapping by specifying field to property associations allowing to test properties which uses a
      * field with a different name.
-     * 
+     *
      * Use this feature specifying a mapping of <code>{"name", "authority"}</code> if you have something like:
-     * 
+     *
      * <code>
      *   private String name;
-     *   
+     *
      *   public void setAuthority(String name) {
      *       this.name = name;
      *   }
      * </code>
-     * 
-     *  
+     *
+     *
      * If the mapping uses a field defined in a superclass then you should prefix the field with the hash (#) symbol,
      * like <code>{"#inheritedFieldName", "propertyName"}</code>, if you have something like:
-     * 
+     *
      * <code>
      *   public void setPropertyName(String name) {
      *       super.inherithedFieldName = name;
      *   }
      * </code>
-     * 
+     *
      * @param mappings
      *            a list of string arrays where each array defines in it's first position the field name and in all
      *            subsequent positions the properties using that field. Multiple properties can be specified for each
@@ -123,11 +135,11 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Tests all the properties defined in this class.
-     * 
+     *
      * A property is considered to have been defined locally if the class defines a field member of the same type used
      * in the accessor methods. Accessor methods overriding superclass accessor methods or accessor methods for
      * properties without an associated member field are not considered `defined properties`.
-     * 
+     *
      * @param type
      *            the class the test is going to be run on.
      * @throws Exception
@@ -142,7 +154,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      * Test all the properties in this class using the <code>definedOnly</code> parameter to restrict the set to locally
      * defined properties or not. A property is considered to have been defined locally if the class defines a field
      * member of the same type used in the accessor methods.
-     * 
+     *
      * @param type
      *            the class the test is going to be run on.
      * @param definedOnly
@@ -167,7 +179,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Tests a property by name checking the accessor methods work as expected.
-     * 
+     *
      * @param type
      *            the class on which the test is going to be run.
      * @param fieldName
@@ -186,7 +198,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Performs a field check including field name mappings.
-     * 
+     *
      * @param instance
      *            the instance on which the properties will be accessed.
      * @param type
@@ -212,7 +224,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Performs a property check.
-     * 
+     *
      * @param instance
      *            the instance on which the properties will be accessed.
      * @param type
@@ -230,38 +242,64 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
         if (setter != null && getter != null) {
             Object value = this.getInstance(field.getType());
             setter.invoke(instance, value);
-            TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
-            if (!field.getType().isPrimitive()) {
-            	setter.invoke(instance, field.getType().cast(null));
-            	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
+            Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
+            if (!field.getType().isPrimitive()
+                 && !setterForFieldCanNotBeNull(field, setter)) {
+                setter.invoke(instance, field.getType().cast(null));
+                Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
             }
         } else {
             if (setter != null) {
                 Object value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 setter.invoke(instance, value);
-                TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
+                Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
                 if (!field.getType().isPrimitive()) {
                 	setter.invoke(instance, field.getType().cast(null));
-                	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, field.get(instance));
+                	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, field.get(instance));
                 }
             }
             if (getter != null) {
                 Object value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 field.set(instance, value);
-                TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
+                Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
                 if (!field.getType().isPrimitive()) {
                 	field.set(instance, null);
-                	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
+                	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
                 }
             }
         }
     }
 
+  /**
+   * Return true if the setter can't handle null value. If there is @Nullable of @ParametersAreNonnullByDefault, return true.
+   */
+  private boolean setterForFieldCanNotBeNull(Field field, Method setter) {
+    return handleJSR305 && (field.getAnnotation(Nonnull.class) != null
+        || isFirstParameterNonnull(setter)
+        || setter.getAnnotation(Nonnull.class) != null
+        || field.getDeclaringClass().getAnnotation(ParametersAreNonnullByDefault.class) != null);
+  }
+
+  private boolean isFirstParameterNonnull(Method setter) {
+        boolean firstIsNonnull = false;
+        for (Annotation[] annotations : setter.getParameterAnnotations()) {
+            for (Annotation annotation : annotations) {
+              if(annotation instanceof Nonnull) {
+                firstIsNonnull = true;
+                break;
+              }
+            }
+            break; // Only on first parameter.
+        }
+
+        return firstIsNonnull;
+    }
+
     /**
      * Recursively traverse the class hierarchy to find fields used by access methods defined on the class under test.
-     * 
+     *
      * @param orig
      *            the class under test.
      * @param type
@@ -296,7 +334,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Returns the setter method for a property.
-     * 
+     *
      * @param type
      *            the class under test.
      * @param propertyName
@@ -324,7 +362,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Returns the getter method for a property.
-     * 
+     *
      * @param type
      *            the class under test.
      * @param propertyName
@@ -366,7 +404,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
 
     /**
      * Returns the proper string concatenation for an accessor method.
-     * 
+     *
      * @param prefix
      *            the method prefix.
      * @param property
