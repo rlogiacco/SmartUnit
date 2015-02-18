@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.AssertionFailedError;
-
 import org.junit.Test;
 
 public class PropertiesTesterTest {
@@ -214,7 +212,7 @@ public class PropertiesTesterTest {
         verify(inherited, times(2)).setMappedAgain(any(String.class));
     }
     
-    @Test(expected=AssertionFailedError.class)
+    @Test(expected=AssertionError.class)
     public void testPropertiesMappingsFailure() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         Inherited inherited = new Inherited();
@@ -225,7 +223,7 @@ public class PropertiesTesterTest {
         tester.testAll(Inherited.class);
     }
     
-    @Test(expected=AssertionFailedError.class)
+    @Test(expected=AssertionError.class)
     public void testTypo() throws Exception {
         PropertiesTester tester = new PropertiesTester();
         tester.testAll(Typo.class);

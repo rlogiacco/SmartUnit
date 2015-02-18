@@ -26,8 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * This is a utility class to test bean properties accessor methods.
@@ -224,30 +223,30 @@ public class PropertiesTester extends AbstractTester {
         if (setter != null && getter != null) {
             Object value = this.getInstance(field.getType());
             setter.invoke(instance, value);
-            TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
+            Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
             if (!field.getType().isPrimitive()) {
             	setter.invoke(instance, field.getType().cast(null));
-            	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
+            	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
             }
         } else {
             if (setter != null) {
                 Object value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 setter.invoke(instance, value);
-                TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
+                Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
                 if (!field.getType().isPrimitive()) {
                 	setter.invoke(instance, field.getType().cast(null));
-                	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, field.get(instance));
+                	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, field.get(instance));
                 }
             }
             if (getter != null) {
                 Object value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 field.set(instance, value);
-                TestCase.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
+                Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
                 if (!field.getType().isPrimitive()) {
                 	field.set(instance, null);
-                	TestCase.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
+                	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
                 }
             }
         }
