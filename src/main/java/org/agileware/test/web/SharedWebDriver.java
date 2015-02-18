@@ -1,5 +1,21 @@
 package org.agileware.test.web;
 
+/*
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
@@ -61,20 +77,19 @@ import org.openqa.selenium.WebDriverException;
  * 
  * <p>
  * The following is an example of Spring configuration:
- * 
- * <pre>
- *   &lt;bean id="driver" class="org.agileware.test.web.SharedWebDriver" factory-method="open">
- *     &lt;constructor-arg ref="delegate" />
- *   &lt;/bean>
- * 
- *   &lt;bean id="delegate" class="org.openqa.selenium.chrome.ChromeDriver">
- *     &lt;!-- capabilities can be set here -->
- *   &lt;/bean>
- * </pre>
- * 
  * </p>
+ *
+ * <pre>
+ *   &lt;bean id="driver" class="org.agileware.test.web.SharedWebDriver" factory-method="open"&gt;
+ *     &lt;constructor-arg ref="delegate" /&gt;
+ *   &lt;/bean&gt;
  * 
- * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *   &lt;bean id="delegate" class="org.openqa.selenium.chrome.ChromeDriver"&gt;
+ *     &lt;!-- capabilities can be set here --&gt;
+ *   &lt;/bean&gt;
+ * </pre> 
+ * 
+ * @author Roberto Lo Giacco rlogiacco@gmail.com
  * 
  */
 public class SharedWebDriver extends AbstractDelegatingWebDriver {

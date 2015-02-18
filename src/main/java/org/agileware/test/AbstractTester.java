@@ -1,5 +1,21 @@
 package org.agileware.test;
 
+/*
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -239,6 +255,11 @@ public abstract class AbstractTester<T extends AbstractTester<T>> {
 	 *            the type you want to map
 	 * @param value
 	 *            the value that will be used to valorize/check fields
+	 * @param <V>
+	 *            the type of the mapping
+     * @param <W>
+     *            the value to be used when testing
+     * @return the <code>AbstractTester</code> instance
 	 */
 	public <V, W extends V> T addMapping(Class<V> type, final W value) {
 		mappings.put(type, new ValueBuilder<Object>() {
@@ -263,6 +284,11 @@ public abstract class AbstractTester<T extends AbstractTester<T>> {
 	 * @param builder
 	 *            a <code>ValueBuilder</code> implementation capable of
 	 *            generating pseudo-random instances of the given type.
+	 * @param <V>
+	 *            the type of the mapping
+     * @param <W>
+     *            the value to be used when testing
+     * @return the <code>AbstractTester</code> instance
 	 */
 	public <V, W extends V> T addMapping(Class<V> type, ValueBuilder<W> builder) {
 		mappings.put(type, builder);

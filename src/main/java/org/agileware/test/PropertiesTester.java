@@ -31,7 +31,7 @@ import org.junit.Assert;
 /**
  * This is a utility class to test bean properties accessor methods.
  * 
- * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ * @author Roberto Lo Giacco rlogiacco@gmail.com
  * 
  */
 public class PropertiesTester extends AbstractTester<PropertiesTester> {
@@ -58,6 +58,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      * 
      * @param names
      *            the list of property names you want to exclude.
+     * @return the <code>PropertiesTester</code> instance.
      */
     public PropertiesTester setNameExclusions(final String... names) {
         excludesByName = Arrays.asList(names);
@@ -70,6 +71,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      * 
      * @param types
      *            the list of types you want to be excluded from properties testing.
+     * @return the <code>PropertiesTester</code> instance.
      */
     public PropertiesTester setTypeExclusions(final Class<?>... types) {
         excludesByType = Arrays.asList(types);
@@ -104,6 +106,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            a list of string arrays where each array defines in it's first position the field name and in all
      *            subsequent positions the properties using that field. Multiple properties can be specified for each
      *            mapping and multiple mappings can be set.
+     * @return the <code>PropertiesTester</code> instance.
      */
     public PropertiesTester setNameMappings(final String[]... mappings) {
         for (String[] mapping : mappings) {
@@ -131,6 +134,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the class the test is going to be run on.
      * @throws Exception
      *             thrown if any of the tests fail.
+     * @return the <code>PropertiesTester</code> instance.
      */
     public PropertiesTester testAll(Class<?> type) throws Exception {
         this.testAll(type, true);
@@ -150,6 +154,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            <code>false</code>.
      * @throws Exception
      *             thrown if any of the tests fail.
+     * @return the <code>PropertiesTester</code> instance.
      */
     public PropertiesTester testAll(Class<?> type, boolean definedOnly) throws Exception {
         Object instance = this.getInstance(type);
@@ -175,6 +180,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the value used to check the accessor methods.
      * @throws Exception
      *             thrown if any of the tests fail.
+     * @return the <code>PropertiesTester</code> instance.
      */
     public PropertiesTester test(Class<?> type, String fieldName, Object value) throws Exception {
         Field field = type.getDeclaredField(fieldName);

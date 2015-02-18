@@ -1,5 +1,21 @@
 package org.agileware.test;
 
+/*
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -15,8 +31,8 @@ import java.util.List;
 /**
  * This is a utility class to test exception constructors
  * 
- * @author Roberto Lo Giacco <rlogiacco@gmail.com>
- * @author Sebastien Le Callonnec <slc_ie@yahoo.ie>
+ * @author Roberto Lo Giacco rlogiacco@gmail.com
+ * @author Sebastien Le Callonnec slc_ie@yahoo.ie
  * 
  */
 public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
@@ -45,6 +61,7 @@ public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 	 * 
 	 * @param type - Class under test.
 	 * @exception Exception - If anything goes wrong.
+     * @return the <code>ConstructorTester</code> instance
 	 */
 	public ConstructorsTester testConstructorIsPrivate(Class<?> type) throws Exception {
 		Constructor<?>[] constructors = type.getDeclaredConstructors();
