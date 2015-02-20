@@ -37,6 +37,17 @@
       <id>rlogiacco</id>
       <name>Roberto Lo Giacco</name>
       <organization>AgileWare.org</organization>
+      <url>https://github.com/rlogiacco</url>
+    </developer>
+    <developer>
+      <id>tychobrailleur</id>
+      <name>Sébastien Le Callonnec</name>
+      <url>https://github.com/tychobrailleur</url>
+    </developer>
+    <developer>
+      <id>twillouer</id>
+      <name>William Delanoue</name>
+      <url>https://github.com/twillouer</url>
     </developer>
   </developers>
 
