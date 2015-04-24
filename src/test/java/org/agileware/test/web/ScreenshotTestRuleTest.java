@@ -21,9 +21,9 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 public class ScreenshotTestRuleTest {
 
 	private static interface TakesScreenshotWebDriver extends WebDriver, TakesScreenshot {
-		
+
 	}
-	
+
 	@Test
 	public void testApply() throws Throwable {
 		WebDriver driver = mock(TakesScreenshotWebDriver.class);

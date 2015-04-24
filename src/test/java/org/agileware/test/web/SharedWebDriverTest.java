@@ -21,6 +21,8 @@ public class SharedWebDriverTest {
 	
 	private Class<? extends WebDriver> driver;
 	
+	public static final String TEST_PAGE = "http://run.plnkr.co/plunks/17M8WwGto2uieNqFXKje/";
+	
 	@Before
 	public void before() {
 		driver = HtmlUnitDriver.class;

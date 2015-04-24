@@ -51,7 +51,6 @@ public class AbstractDelegatingWebDriverTest {
 		when(mock.delegate.findElement(by)).thenReturn(null);
 		mock.findElement(by);
 		verify(mock.delegate).findElement(by);
-
 	}
 
 	@Test
@@ -127,8 +126,7 @@ public class AbstractDelegatingWebDriverTest {
 		mock.get("http://www.google.com");
 		mock.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
 		mock.executeAsyncScript("window.setTimeout(arguments[arguments.length - 1], 500);");
-		verify((JavascriptExecutor) mock.delegate).executeAsyncScript(
-				"window.setTimeout(arguments[arguments.length - 1], 500);");
+		verify((JavascriptExecutor) mock.delegate).executeAsyncScript("window.setTimeout(arguments[arguments.length - 1], 500);");
 	}
 
 	@Test(expected = WebDriverException.class)

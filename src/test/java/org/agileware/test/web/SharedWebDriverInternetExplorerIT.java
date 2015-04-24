@@ -13,17 +13,17 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
  *
  */
 public class SharedWebDriverInternetExplorerIT {
-	
+
 	private SharedWebDriver browser;
-	
+
 	private Class<? extends WebDriver> driver;
-	
+
 	@Before
 	public void before() {
 		driver = InternetExplorerDriver.class;
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, driver.getName());
 	}
-	
+
 	@After
 	public void after() {
 		SharedWebDriver.destroy();
@@ -32,51 +32,51 @@ public class SharedWebDriverInternetExplorerIT {
 	@Test
 	public void open() {
 		browser = SharedWebDriver.open();
-		
+
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
 		SharedWebDriver.open();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
-	
-	@Test(expected=WebDriverException.class)
+
+	@Test(expected = WebDriverException.class)
 	public void openFails() {
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, "some.non.existing.Class");
 		browser = SharedWebDriver.open();
 	}
-	
+
 	@Test
 	public void openWithDriverInstance() throws Throwable {
 		browser = SharedWebDriver.open(driver.newInstance());
-		
+
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
 		SharedWebDriver.open();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
-	
+
 	@Test
 	public void openWithDriverClass() throws Throwable {
 		browser = SharedWebDriver.open(driver);
-		
+
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
 		SharedWebDriver.open();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
-	
-	@Test(expected=WebDriverException.class)
+
+	@Test(expected = WebDriverException.class)
 	public void openWithDriverClassFailing() throws Throwable {
 		browser = SharedWebDriver.open(AbstractDelegatingWebDriver.class);
 	}
-	
+
 	@Test
 	public void close() throws Exception {
 		browser = SharedWebDriver.open(driver);
-		
+
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
 		browser.close();
@@ -88,16 +88,16 @@ public class SharedWebDriverInternetExplorerIT {
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
-	
+
 	@Test
 	public void quit() throws Exception {
 		browser = SharedWebDriver.open(driver);
-		
+
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
 		browser.quit();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
-		
+
 		for (int i = 0; i < 5; i++) {
 			browser.executeScript("window.open()");
 		}
@@ -105,30 +105,30 @@ public class SharedWebDriverInternetExplorerIT {
 		browser.quit();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
-		
+
 		browser.executeScript("window.open()");
 		browser.switchTo().window(original);
 		browser.close();
 		browser.quit();
-		
+
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertFalse(browser.getWindowHandle().equals(original));
-		
+
 	}
-	
+
 	@Test
 	public void destroy() throws Throwable {
 		browser = SharedWebDriver.open(driver);
 		SharedWebDriver.destroy();
-		SharedWebDriver.open((WebDriver)null);
+		SharedWebDriver.open((WebDriver) null);
 		SharedWebDriver.destroy();
 		SharedWebDriver.destroy();
 	}
-	
+
 	public void perf() throws Exception {
 		browser = SharedWebDriver.open(driver);
 		browser.get("http://www.google.com");
-		long elapsed = (Long)browser.executeScript("return (performance.timing.loadEventEnd - performance.timing.connectStart)");
+		long elapsed = (Long) browser.executeScript("return (performance.timing.loadEventEnd - performance.timing.connectStart)");
 		Assert.assertTrue(elapsed > 0);
 	}
 

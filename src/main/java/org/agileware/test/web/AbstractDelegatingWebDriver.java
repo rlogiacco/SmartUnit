@@ -202,9 +202,9 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 		}
 	}
 
-	private class DelegatingWebElement implements WebElement {
+	protected class DelegatingWebElement implements WebElement {
 		
-		private WebElement delegate;
+		protected WebElement delegate;
 
 		public DelegatingWebElement(WebElement delegate) {
 			this.delegate = delegate;
