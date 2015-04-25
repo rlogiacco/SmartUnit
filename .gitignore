@@ -1,6 +1,7 @@
 /.settings
 /.classpath
 /.project
+/.springBeans
 /target
 /pom.xml.releaseBackup
 /release.properties
