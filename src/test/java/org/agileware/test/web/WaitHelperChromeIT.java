@@ -43,7 +43,12 @@ public class WaitHelperChromeIT {
 		browser.findElement(By.id("async")).click();
 		browser.findElement(By.id("wait-if"));
 		assertNotNull(waitOn(browser, 6000).untilRemoved(By.id("wait-if")));
-		assertEquals("1", browser.findElement(By.id("counter")).getText());
+		try {
+			browser.findElement(By.id("wait-if"));
+			fail("Element found");
+		} catch (NoSuchElementException e) {
+			// expected, but here only
+		}
 	}
 
 	@Test
@@ -70,7 +75,7 @@ public class WaitHelperChromeIT {
 	public void testUntilHidden() {
 		browser.get(SharedWebDriverTest.TEST_PAGE);
 		browser.findElement(By.id("async")).click();
-		browser.findElement(By.id("wait-show"));
+		assertTrue(browser.findElement(By.id("wait-show")).isDisplayed());
 		assertFalse(waitOn(browser, 6, SECONDS).untilHidden(By.id("wait-show")).isDisplayed());
 	}
 
@@ -88,6 +93,7 @@ public class WaitHelperChromeIT {
 		browser.findElement(By.id("async")).click();
 		assertTrue(browser.findElement(By.id("wait-enable")).isEnabled());
 		waitOn(browser, 6, SECONDS).untilDisabled(By.id("wait-enable"));
+		assertFalse(browser.findElement(By.id("wait-enable")).isEnabled());
 		assertEquals("1", browser.findElement(By.id("counter")).getText());
 	}
 }
