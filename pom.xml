@@ -9,7 +9,7 @@
 
   <groupId>org.agileware</groupId>
   <artifactId>smartunit</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.10.0</version>
   <packaging>jar</packaging>
 
   <name>SmartUnit</name>
