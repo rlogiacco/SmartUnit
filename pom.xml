@@ -143,6 +143,35 @@
           <releaseProfiles>ie,chrome,firefox</releaseProfiles>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.btmatthews.maven.plugins</groupId>
+        <artifactId>emailserver-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <monitorKey>emailserver</monitorKey>
+          <monitorPort>10025</monitorPort>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-mail</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <daemon>true</daemon>
+              <type>greenmail</type>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-mail</id>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -193,6 +222,19 @@
     </dependency>
 
     <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4.7</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>info.cukes</groupId>
       <artifactId>cucumber-spring</artifactId>
       <version>1.2.2</version>
@@ -200,7 +242,7 @@
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <artifactId>spring-context-support</artifactId>
       <version>3.2.13.RELEASE</version>
       <scope>test</scope>
     </dependency>
@@ -216,7 +258,6 @@
       <version>3.2.13.RELEASE</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <profiles>
