@@ -1,11 +1,14 @@
 package org.agileware.test.web;
 
+import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.lift.Matchers;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.agileware.test.web.WaitHelper.waitOn;
@@ -95,5 +98,36 @@ public class WaitHelperChromeIT {
 		waitOn(browser, 6, SECONDS).untilDisabled(By.id("wait-enable"));
 		assertFalse(browser.findElement(By.id("wait-enable")).isEnabled());
 		assertEquals("1", browser.findElement(By.id("counter")).getText());
+	}
+	
+	@Test
+	public void testUntil() {
+		browser.get(SharedWebDriverTest.TEST_PAGE);
+		assertEquals("0", browser.findElement(By.name("counter")).getText());
+		browser.findElement(By.id("delayed")).click();
+		assertEquals("0", browser.findElement(By.name("counter")).getText());
+		waitOn(browser, 6, SECONDS).until(By.name("counter"), Matchers.text(new IsEqual<String>("1")));
+		assertEquals("1", browser.findElement(By.name("counter")).getText());
+	}
+	
+	@Test(expected = TimeoutException.class)
+	public void testUntilExpires() {
+		browser.get(SharedWebDriverTest.TEST_PAGE);
+		assertEquals("0", browser.findElement(By.name("counter")).getText());
+		browser.findElement(By.id("delayed")).click();
+		assertEquals("0", browser.findElement(By.name("counter")).getText());
+		waitOn(browser, 6, SECONDS).until(By.name("counter"), Matchers.text(new IsEqual<String>("2")));
+	}
+	
+	@Test
+	public void testUntilCount() {
+		browser.get(SharedWebDriverTest.TEST_PAGE);
+		browser.findElement(By.id("delayed")).click();
+		
+		assertEquals(2, browser.findElements(By.className("wait")).size());
+		
+		waitOn(browser, 6, SECONDS).untilCount(By.className("wait"), Matchers.exactly(3));
+		
+		assertEquals(3, browser.findElements(By.className("wait")).size());
 	}
 }
