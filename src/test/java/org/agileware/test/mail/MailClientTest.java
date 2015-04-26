@@ -1,19 +1,16 @@
 package org.agileware.test.mail;
 
-import javax.mail.AuthenticationFailedException;
+import javax.mail.Flags.Flag;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.openqa.selenium.TimeoutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public abstract class MailClientTest {
 
@@ -22,106 +19,112 @@ public abstract class MailClientTest {
 	@Autowired
 	private MailSender sender;
 
-	private MailClient client = new MailClient();
-
-	private void sendTestMessage(final String from, final String to, final String subject) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(to);
-		message.setFrom(from);
-		message.setSubject(subject);
-		message.setText("message sent on " + System.currentTimeMillis());
-		sender.send(message);
+	private void sendMessage(final String from, final String to, final String subject) throws InterruptedException {
+		this.sendMessages(1, from, to, subject);
+	}
+	
+	private void sendMessages(final int count, final String from, final String to, final String subject) throws InterruptedException {
+		for (int i = 0; i < count; i++) {
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setTo(to);
+			message.setFrom(from);
+			message.setSubject("[" + i + "] " + subject);
+			message.setText("message sent on " + System.currentTimeMillis());
+			sender.send(message);
+		}
+		Thread.sleep(1000);
 	}
 
 	public void reset(String account) throws Exception {
+		sendMessage("me", account, "something");
+		MailClient client = new MailClient(protocol + "://" + account + ":" + account + "@localhost");
+		
 		try {
-			client.connect(protocol + "://" + account + ":" + account + "@localhost");
-			client.deleteAll();
-			client.close();
-		} catch (MessagingException me) {
-			// fail silently
+			client.deleteAll().waitForCount(0);
+		} catch (TimeoutException te) {
+			System.out.println("Reset failed");
+			throw te;
 		}
+		
 	}
 
+	public void inspect(String account) throws Exception {
+		Message[] messages = new MailClient(protocol + "://" + account + ":" + account + "@localhost").listAll();
+		System.out.println("# inspecting: " + account);
+		for (Message message : messages) {
+			System.out.println("--- message ---");
+			System.out.println(MailClient.toString(message));
+		}
+		System.out.println("# inspection complete: found " + messages.length);
+	}
+	
 	@Test
 	public void testConnect() throws Exception {
-		sendTestMessage("me", "test", "something");
-		client.connect(protocol + "://test:test@localhost");
+		sendMessage("me", "test", "something");
+		new MailClient(protocol + "://test:test@localhost");
 	}
 
 	@Test(expected = MessagingException.class)
 	public void testConnectNone() throws Exception {
-		client.connect(protocol + "://none:none@localhost");
+		new MailClient(protocol + "://none:none@localhost");
 	}
 
 	@Test
 	public void testDeleteAll() throws Exception {
 		this.reset("deleteAll");
 		
-		for (int i = 0; i < 10; i++) {
-			sendTestMessage("me", "deleteAll", "something" + i);
-		}
+		sendMessages(10, "me", "deleteAll", "something");
 
-		client.connect(protocol + "://deleteAll:deleteAll@localhost");
+		MailClient client = new MailClient(protocol + "://deleteAll:deleteAll@localhost");
 
 		assertEquals(10, client.listAll().length);
-		client.deleteAll().flush();
+		client.deleteAll().waitForCount(0);
 		assertEquals(0, client.listAll().length);
 	}
 
 	@Test
 	public void testDeleteAllEmptyInbox() throws Exception {
 		this.reset("deleteAll");
-		client.connect(protocol + "://deleteAll:deleteAll@localhost");
+		
+		MailClient client = new MailClient(protocol + "://deleteAll:deleteAll@localhost");
 		assertEquals(0, client.listAll().length);
-		client.deleteAll().flush();
+		client.deleteAll().waitForCount(0);
 		assertEquals(0, client.listAll().length);
-	}
-
-	@Test
-	public void testPop() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testListAll() throws Exception {
-		client.connect(protocol + "://listAll:listAll@localhost").deleteAll().close();
-		System.out.println("OK");
-		// Thread.sleep(2000);
-		assertEquals(0, client.connect("pop3://listAll:listAll@localhost").listAll().length);
-		for (int i = 0; i < 10; i++) {
-			sendTestMessage("me", "listAll", "something" + i);
-		}
-		client.connect(protocol + "://listAll:listAll@localhost");
+		this.reset("listAll");
+		
+		MailClient client = new MailClient(protocol + "://listAll:listAll@localhost");
+
+		assertEquals(0, client.listAll().length);
+		sendMessages(10, "me", "listAll", "something");
 		assertEquals(10, client.listAll().length);
 
-		for (int i = 0; i < 10; i++) {
-			sendTestMessage("me", "listAll", "something" + i);
-		}
+		sendMessages(10, "me", "listAll", "something");
 
 		assertEquals(20, client.listAll().length);
-
-		client.deleteAll().close();
 	}
 
 	@Test
 	public void testFind() throws Exception {
-		client.connect(protocol + "://find:find@localhost");
-		for (int i = 0; i < 10; i++) {
-			sendTestMessage("me", "find", "something" + i);
-		}
+		this.reset("find");
 
-		// assertEquals(1, client.find().length);
+		sendMessages(10, "me", "find", "something");
+
+		MailClient client = new MailClient(protocol + "://find:find@localhost");
+		assertEquals(10, client.find(SearchTerms.from("me")).length);
 	}
 
 	@Test
 	public void testFindNoMatch() throws Exception {
-		client.connect(protocol + "://find:find@localhost");
-		for (int i = 0; i < 10; i++) {
-			sendTestMessage("me", "deleteAll", "something" + i);
-		}
-
-		assertEquals(10, client.listAll().length);
+		this.reset("find");
+		
+		sendMessages(10, "me", "findNone", "something");
+		
+		MailClient client = new MailClient(protocol + "://find:find@localhost");
+		assertEquals(0, client.listAll().length);
 	}
 
 }
