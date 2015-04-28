@@ -24,6 +24,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.lift.Matchers;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import com.google.common.base.Function;
@@ -294,5 +295,22 @@ public class WaitHelper {
 				return result;
 			}
 		});
+	}
+	
+	/**
+	 * Holds the execution until at the elements count matching the search
+	 * condition <b>matches the provided count</b> or the maximum wait expires.
+	 * 
+	 * @see org.openqa.selenium.lift.Matchers
+	 * @see org.hamcrest.Matcher
+	 * 
+	 * @param by
+	 *            search condition
+	 * @param count
+	 *            the element count to match
+	 * @return a <code>java.util.List</code> containing found elements
+	 */
+	public List<WebElement> untilCount(final By by, final int count) {
+		return this.untilCount(by, Matchers.exactly(count));
 	}
 }
