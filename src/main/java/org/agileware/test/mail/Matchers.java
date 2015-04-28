@@ -2,12 +2,18 @@ package org.agileware.test.mail;
 
 import javax.mail.Address;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.StringContains;
+import org.hamcrest.core.StringEndsWith;
+import org.hamcrest.core.StringStartsWith;
+import org.hamcrest.core.SubstringMatcher;
+import org.hamcrest.text.IsEqualIgnoringCase;
 
 public class Matchers {
 	public static Matcher<Message> bySubject(final Matcher<String> matcher) {
@@ -200,34 +206,34 @@ public class Matchers {
 	}
 	
 	public static Matcher<String> equals(final String value) {
-		return null;
+		return IsEqual.equalTo(value);
 	}
 	
 	public static Matcher<String> equalsIgnoreCase(final String value) {
-		return null;
+		return IsEqualIgnoringCase.equalToIgnoringCase(value);
 	}
 	
-	public static Matcher<String> contains(final String value) {
-		return null;
+	public static Matcher<String> contains(final String substring) {
+		return StringContains.containsString(substring);
 	}
 	
-	public static Matcher<String> containsIgnoreCase(final String value) {
-		return null;
+	public static Matcher<String> containsIgnoreCase(final String substring) {
+		return StringContains.containsString(substring);
 	}
 	
-	public static Matcher<String> startsWith(final String value) {
-		return null;
+	public static Matcher<String> startsWith(final String prefix) {
+		return StringStartsWith.startsWith(prefix);
 	}
 	
-	public static Matcher<String> startsWithIgnoreCase(final String value) {
-		return null;
+	public static Matcher<String> startsWithIgnoreCase(final String prefix) {
+		return StringStartsWith.startsWith(prefix);
 	}
 	
-	public static Matcher<String> endsWith(final String value) {
-		return null;
+	public static Matcher<String> endsWith(final String suffix) {
+		return StringEndsWith.endsWith(suffix);
 	}
 
-	public static Matcher<String> endsWithIgnoreCase(final String value) {
-		return null;
+	public static Matcher<String> endsWithIgnoreCase(final String suffix) {
+		return StringEndsWith.endsWith(suffix);
 	}
 }
