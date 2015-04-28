@@ -130,4 +130,13 @@ public class WaitHelperChromeIT {
 		
 		assertEquals(3, browser.findElements(By.className("wait")).size());
 	}
+	
+	@Test
+	public void testUntilCountIs() {
+		browser.get(SharedWebDriverTest.TEST_PAGE);
+		browser.findElement(By.id("delayed")).click();
+		assertEquals(2, browser.findElements(By.className("wait")).size());
+		waitOn(browser, 6, SECONDS).untilCount(By.className("wait"), 3);
+		assertEquals(3, browser.findElements(By.className("wait")).size());
+	}
 }
