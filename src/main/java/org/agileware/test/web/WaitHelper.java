@@ -175,7 +175,7 @@ public class WaitHelper {
 
 	/**
 	 * Holds the execution until an element matching the search condition is
-	 * <b>found and non visible</b> or <b>not found</b> or the maximum wait expires.
+	 * <b>found and non visible</b> or the maximum wait expires.
 	 * 
 	 * @param by
 	 *            search condition
@@ -221,7 +221,7 @@ public class WaitHelper {
 
 	/**
 	 * Holds the execution until an element matching the search condition is
-	 * <b>found and enabled</b> or <b>not found</b> or the maximum wait expires.
+	 * <b>found and disabled</b> or the maximum wait expires.
 	 * 
 	 * @param by
 	 *            search condition
