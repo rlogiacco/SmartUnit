@@ -13,6 +13,8 @@ The easiest way to provide the additional drivers path is to use system properti
 mvn integration-test -Pfirefox,chrome,ie -Dwebdriver.ie.driver=<path>\IEDriverServer.exe -Dwebdriver.chrome.driver=<path>\chromedriver.exe
 ```
 
+Please note that the Selenium driver for Internet Explorer **requires** to set the protection mode to be the same on all zones, otherwise the browser will detach unexpectedly.
+
 **Do not proceed to the release process unless the above command executes without errors**
 
 To prepare and perform the release the `gpg.exe` command must be on the PATH in order to sign the artifacts.
