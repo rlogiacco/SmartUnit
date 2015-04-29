@@ -52,7 +52,7 @@ public class SharedWebDriverTest {
 	}
 	
 	@Test
-	public void openWithDriverInstance() throws Throwable {
+	public void openWithDriverInstance() throws Exception {
 		browser = SharedWebDriver.open(driver.newInstance());
 		
 		assertEquals(1, browser.getWindowHandles().size());
@@ -63,7 +63,7 @@ public class SharedWebDriverTest {
 	}
 	
 	@Test
-	public void openWithDriverClass() throws Throwable {
+	public void openWithDriverClass() throws Exception {
 		browser = SharedWebDriver.open(driver);
 		
 		assertEquals(1, browser.getWindowHandles().size());
@@ -74,7 +74,7 @@ public class SharedWebDriverTest {
 	}
 	
 	@Test(expected=WebDriverException.class)
-	public void openWithDriverClassFailing() throws Throwable {
+	public void openWithDriverClassFailing() throws Exception {
 		browser = SharedWebDriver.open(AbstractDelegatingWebDriver.class);
 	}
 	
