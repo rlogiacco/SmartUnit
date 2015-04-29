@@ -4,6 +4,8 @@ SmartUnit artifacts, including sources and javadocs, are available on the [centr
 
 Have a look at [our wiki](https://github.com/rlogiacco/SmartUnit/wiki) for more information.
 
+[![TravisCI Build Status](https://travis-ci.org/rlogiacco/SmartUnit.svg?branch=master)](https://travis-ci.org/rlogiacco/SmartUnit)
+
 ### Release
 
 Before initiating a release it's strongly adviced to execute the full integration test suite which is normally not executed during the common *install* phase.
