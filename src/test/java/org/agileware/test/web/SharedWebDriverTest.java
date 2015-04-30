@@ -77,7 +77,7 @@ public class SharedWebDriverTest {
 	@Test(expected=WebDriverException.class)
 	public void openWithDriverClassFailing() throws Exception {
 		browser = SharedWebDriver.open(AbstractDelegatingWebDriver.class);
-		fail("Did it really manage to instantiate an abstract class?");
+		fail("Did it really manage to instantiate an abstract class? " + browser.getDelegate().getClass());
 	}
 	
 	@Test

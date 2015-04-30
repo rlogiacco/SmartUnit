@@ -224,6 +224,7 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 			// do nothing
 		} finally {
 			instance = null;
+			System.out.println("instance is null");
 		}
 	}
 }
