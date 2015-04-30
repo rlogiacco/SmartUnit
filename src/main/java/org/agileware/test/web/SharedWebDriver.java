@@ -218,10 +218,11 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * implementation.
 	 */
 	public static synchronized void destroy() {
-		if (instance != null) {
-			if (instance.delegate != null) {
-				instance.delegate.quit();
-			}
+		try {
+			instance.delegate.quit();
+		} catch (NullPointerException npe) {
+			// do nothing
+		} finally {
 			instance = null;
 		}
 	}

@@ -3,6 +3,7 @@ package org.agileware.test.web;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -76,6 +77,7 @@ public class SharedWebDriverTest {
 	@Test(expected=WebDriverException.class)
 	public void openWithDriverClassFailing() throws Exception {
 		browser = SharedWebDriver.open(AbstractDelegatingWebDriver.class);
+		fail("Did it really manage to instantiate an abstract class?");
 	}
 	
 	@Test
