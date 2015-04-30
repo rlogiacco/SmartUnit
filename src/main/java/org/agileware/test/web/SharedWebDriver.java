@@ -124,6 +124,10 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * @return the shared instance
 	 */
 	public static synchronized SharedWebDriver open(WebDriver delegate) {
+		// should we replace the previous implementation silently?
+		//if (instance != null && !instance.delegate.getClass().isInstance(delegate)) {
+		//	destroy();
+		//}
 		if (instance == null) {
 			instance = new SharedWebDriver(delegate);
 		} else {
@@ -162,6 +166,10 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 *             if the delegate instance cannot be created
 	 */
 	public static synchronized SharedWebDriver open(Class<? extends WebDriver> delegate) throws WebDriverException {
+		// should we replace the previous implementation silently?
+		//if (instance != null && delegate != instance.delegate.getClass()) {
+		//	destroy();
+		//}
 		if (instance == null) {
 			try {
 				instance = new SharedWebDriver(delegate.newInstance());
@@ -218,13 +226,11 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * implementation.
 	 */
 	public static synchronized void destroy() {
-		try {
-			instance.delegate.quit();
-		} catch (NullPointerException npe) {
-			// do nothing
-		} finally {
+		if (instance != null) {
+			if (instance.delegate != null) {
+				instance.delegate.quit();
+			}
 			instance = null;
-			System.out.println("instance is null");
 		}
 	}
 }
