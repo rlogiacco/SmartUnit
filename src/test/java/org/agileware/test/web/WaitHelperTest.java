@@ -22,17 +22,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class WaitHelperTest {
-	private static HtmlUnitDriver driver;
 	private WebDriver browser;
 	
 	static {
 		BrowserVersion.setDefault(BrowserVersion.FIREFOX_24);
-		driver = new HtmlUnitDriver(true);
 	}
 
 	@Before
 	public void before() {
-		browser = SharedWebDriver.open(driver);
+		browser = new HtmlUnitDriver(true);
 	}
 
 	@Test
