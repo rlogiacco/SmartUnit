@@ -25,7 +25,7 @@ public class WaitHelperTest {
 	private WebDriver browser;
 	
 	static {
-		BrowserVersion.setDefault(BrowserVersion.FIREFOX_24);
+		BrowserVersion.setDefault(BrowserVersion.CHROME);
 	}
 
 	@Before
