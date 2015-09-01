@@ -19,7 +19,10 @@ Please note that the Selenium driver for Internet Explorer **requires** to set t
 
 **Do not proceed to the release process unless the above command executes without errors**
 
-To prepare and perform the release the `gpg.exe` command must be on the PATH in order to sign the artifacts.
+To prepare and perform the release the `gpg.exe` command must be on the PATH in order to sign the artifacts so it's better to double check the environment configuration and your passphrase by running:
+```
+gpg --output test.sig --sign <anyfile>
+```
 
 #### Release Keys
 
