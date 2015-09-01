@@ -23,6 +23,6 @@ To prepare and perform the release the `gpg.exe` command must be on the PATH in 
 
 #### Release Keys
 
-Three keys are required for the release: a GPG one to sign the artifacts, an RSA one to commit release changes on Gihub and an RSA one to push the artifacts onto the Maven Central repository (hosted by Sonatype).
+Three keys are required for the release: a GPG one to sign the artifacts, an RSA one to commit release changes on Github and an RSA one to push the artifacts onto the Maven Central repository (hosted by Sonatype).
 
 You can use the same RSA key for both Github and Sonatype to reduce the amount of passwords and configurations if you wish.
