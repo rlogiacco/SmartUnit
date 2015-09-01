@@ -1,5 +1,7 @@
 package org.agileware.test.web;
 
+import org.openqa.selenium.NoSuchWindowException;
+
 /*
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -228,7 +230,11 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	public static synchronized void destroy() {
 		if (instance != null) {
 			if (instance.delegate != null) {
-				instance.delegate.quit();
+				try {
+					instance.delegate.quit();
+				} catch (NoSuchWindowException nswe) {
+					// do nothing, it's too late
+				}
 			}
 			instance = null;
 		}
