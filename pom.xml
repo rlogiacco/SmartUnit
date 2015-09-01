@@ -144,7 +144,7 @@
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
-          <goals>deploy nexus-staging:release</goals>
+          <goals>deploy</goals>
           <releaseProfiles>ie,chrome,firefox</releaseProfiles>
         </configuration>
       </plugin>
