@@ -24,6 +24,14 @@ To prepare and perform the release the `gpg.exe` command must be on the PATH in 
 gpg --output test.sig --sign <anyfile>
 ```
 
+Additionally the `git`, `ssh`, `ssh-agent` must be on the PATH with your Github SSH key loaded:
+```
+bash
+eval$(ssh-agent)
+ssh-add ~/.ssh/id_rsa
+ssh -T git@github.com
+```
+
 #### Release Keys
 
 Three keys are required for the release: a GPG one to sign the artifacts, an RSA one to commit release changes on Github and an RSA one to push the artifacts onto the Maven Central repository (hosted by Sonatype).
