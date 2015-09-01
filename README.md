@@ -19,17 +19,18 @@ Please note that the Selenium driver for Internet Explorer **requires** to set t
 
 **Do not proceed to the release process unless the above command executes without errors**
 
-To prepare and perform the release the `gpg.exe` command must be on the PATH in order to sign the artifacts so it's better to double check the environment configuration and your passphrase by running:
+To prepare and perform the release multiple _unix like_ commands needs to be on the path, the simplest way to have them all is to perform the release within the Git Bash shell.
+
+The `gpg` command must be on the PATH in order to sign the artifacts so it's better to double check the environment configuration and your passphrase by running:
 ```
-gpg --output test.sig --sign <anyfile>
+$> gpg --output test.sig --sign <anyfile>
 ```
 
-Additionally the `git`, `ssh`, `ssh-agent` must be on the PATH with your Github SSH key loaded:
+Additionally `git`, `ssh` and `ssh-agent` executables must be on the PATH, the latter with your Github SSH key loaded:
 ```
-bash
-eval$(ssh-agent)
-ssh-add ~/.ssh/id_rsa
-ssh -T git@github.com
+$> eval$(ssh-agent)
+$> ssh-add ~/.ssh/id_rsa
+$> ssh -T git@github.com
 ```
 
 #### Release Keys
