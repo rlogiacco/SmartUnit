@@ -111,11 +111,14 @@ public class WaitHelper {
 	 * @return the found element
 	 */
 	public WebElement untilAdded(final By by) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			public WebElement apply(SearchContext context) {
-				return context.findElement(by);
-			}
-		});
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					public WebElement apply(SearchContext context) {
+						return context.findElement(by);
+					}
+				});
 	}
 
 	/**
@@ -131,18 +134,21 @@ public class WaitHelper {
 	 *         element was never found
 	 */
 	public WebElement untilRemoved(final By by) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			private WebElement result;
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					private WebElement result;
 
-			public WebElement apply(SearchContext context) {
-				try {
-					result = context.findElement(by);
-				} catch (NoSuchElementException nsee) {
-					return result;
-				}
-				throw new NoSuchElementException("Element found");
-			}
-		});
+					public WebElement apply(SearchContext context) {
+						try {
+							result = context.findElement(by);
+						} catch (NoSuchElementException nsee) {
+							return result;
+						}
+						throw new NoSuchElementException("Element found");
+					}
+				});
 	}
 
 	/**
@@ -154,19 +160,22 @@ public class WaitHelper {
 	 * @return the found element
 	 */
 	public WebElement untilShown(final By by) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			public WebElement apply(SearchContext context) {
-				WebElement result = context.findElement(by);
-				try {
-					if (!result.isDisplayed()) {
-						throw new NoSuchElementException("Element not visible");
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					public WebElement apply(SearchContext context) {
+						WebElement result = context.findElement(by);
+						try {
+							if (!result.isDisplayed()) {
+								throw new NoSuchElementException("Element not visible");
+							}
+							return result;
+						} catch (StaleElementReferenceException sere) {
+							throw new NoSuchElementException("Element is currently stale");
+						}
 					}
-					return result;
-				} catch (StaleElementReferenceException sere) {
-					throw new NoSuchElementException("Element is currently stale");
-				}
-			}
-		});
+				});
 	}
 
 	/**
@@ -178,19 +187,22 @@ public class WaitHelper {
 	 * @return the found element
 	 */
 	public WebElement untilHidden(final By by) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			public WebElement apply(SearchContext context) {
-				WebElement result = context.findElement(by);
-				try {
-					if (result.isDisplayed()) {
-						throw new NoSuchElementException("Element is visible");
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					public WebElement apply(SearchContext context) {
+						WebElement result = context.findElement(by);
+						try {
+							if (result.isDisplayed()) {
+								throw new NoSuchElementException("Element is visible");
+							}
+							return result;
+						} catch (StaleElementReferenceException sere) {
+							throw new NoSuchElementException("Element is currently stale");
+						}
 					}
-					return result;
-				} catch (StaleElementReferenceException sere) {
-					throw new NoSuchElementException("Element is currently stale");
-				}
-			}
-		});
+				});
 	}
 
 	/**
@@ -202,19 +214,22 @@ public class WaitHelper {
 	 * @return the found element
 	 */
 	public WebElement untilEnabled(final By by) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			public WebElement apply(SearchContext context) {
-				WebElement result = context.findElement(by);
-				try {
-					if (!result.isEnabled()) {
-						throw new NoSuchElementException("Element not enabled");
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					public WebElement apply(SearchContext context) {
+						WebElement result = context.findElement(by);
+						try {
+							if (!result.isEnabled()) {
+								throw new NoSuchElementException("Element not enabled");
+							}
+							return result;
+						} catch (StaleElementReferenceException sere) {
+							throw new NoSuchElementException("Element is currently stale");
+						}
 					}
-					return result;
-				} catch (StaleElementReferenceException sere) {
-					throw new NoSuchElementException("Element is currently stale");
-				}
-			}
-		});
+				});
 	}
 
 	/**
@@ -226,19 +241,22 @@ public class WaitHelper {
 	 * @return the found element
 	 */
 	public WebElement untilDisabled(final By by) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			public WebElement apply(SearchContext context) {
-				WebElement result = context.findElement(by);
-				try {
-					if (result.isEnabled()) {
-						throw new NoSuchElementException("Element is enabled");
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					public WebElement apply(SearchContext context) {
+						WebElement result = context.findElement(by);
+						try {
+							if (result.isEnabled()) {
+								throw new NoSuchElementException("Element is enabled");
+							}
+							return result;
+						} catch (StaleElementReferenceException sere) {
+							throw new NoSuchElementException("Element is currently stale");
+						}
 					}
-					return result;
-				} catch (StaleElementReferenceException sere) {
-					throw new NoSuchElementException("Element is currently stale");
-				}
-			}
-		});
+				});
 	}
 
 	/**
@@ -256,19 +274,22 @@ public class WaitHelper {
 	 * @return the found element
 	 */
 	public WebElement until(final By by, final Matcher<WebElement> matcher) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, WebElement>() {
-			public WebElement apply(SearchContext context) {
-				WebElement result = context.findElement(by);
-				try {
-					if (!matcher.matches(result)) {
-						throw new NoSuchElementException("Element does not match");
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, WebElement>() {
+					public WebElement apply(SearchContext context) {
+						WebElement result = context.findElement(by);
+						try {
+							if (!matcher.matches(result)) {
+								throw new NoSuchElementException("Element does not match");
+							}
+							return result;
+						} catch (StaleElementReferenceException sere) {
+							throw new NoSuchElementException("Element is currently stale");
+						}
 					}
-					return result;
-				} catch (StaleElementReferenceException sere) {
-					throw new NoSuchElementException("Element is currently stale");
-				}
-			}
-		});
+				});
 	}
 
 	/**
@@ -286,19 +307,22 @@ public class WaitHelper {
 	 * @return a <code>java.util.List</code> containing found elements
 	 */
 	public List<WebElement> untilCount(final By by, final Matcher<Integer> matcher) {
-		return new FluentWait<SearchContext>(context).withTimeout(duration, timeUnit).ignoring(NoSuchElementException.class).until(new Function<SearchContext, List<WebElement>>() {
-			public List<WebElement> apply(SearchContext context) {
-				List<WebElement> result = context.findElements(by);
-				try {
-					if (!matcher.matches(result.size())) {
-						throw new NoSuchElementException("Element does not match");
+		return new FluentWait<SearchContext>(context)
+				.withTimeout(duration, timeUnit)
+				.ignoring(NoSuchElementException.class)
+				.until(new Function<SearchContext, List<WebElement>>() {
+					public List<WebElement> apply(SearchContext context) {
+						List<WebElement> result = context.findElements(by);
+						try {
+							if (!matcher.matches(result.size())) {
+								throw new NoSuchElementException("Element does not match");
+							}
+							return result;
+						} catch (StaleElementReferenceException sere) {
+							throw new NoSuchElementException("Element is currently stale");
+						}
 					}
-					return result;
-				} catch (StaleElementReferenceException sere) {
-					throw new NoSuchElementException("Element is currently stale");
-				}
-			}
-		});
+				});
 	}
 
 	/**
