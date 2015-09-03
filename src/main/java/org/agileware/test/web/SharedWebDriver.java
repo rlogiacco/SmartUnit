@@ -104,6 +104,15 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 			}
 		});
 	}
+	
+	/**
+	 * Creates a new instance wrapping the web driver delegate previously initialized.
+	 * 
+	 * @throws NullPointerException if no web driver delegate was previously initialized.
+	 */
+	public SharedWebDriver() throws NullPointerException {
+		super(SharedWebDriver.instance.delegate);
+	}
 
 	/**
 	 * Creates a new instance wrapping the provided delegate WebDriver
@@ -124,8 +133,22 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 *            the delegate WebDriver instance to use if no shared instance
 	 *            is available
 	 * @return the shared instance
+	 * @deprecated As of release 0.11.0, replaced by {@link #init(WebDriver)}
 	 */
 	public static synchronized SharedWebDriver open(WebDriver delegate) {
+		return init(delegate);
+	}
+	
+	/**
+	 * Returns the current shared instance or creates a new one using the
+	 * provided delegate implementation.
+	 * 
+	 * @param delegate
+	 *            the delegate WebDriver instance to use if no shared instance
+	 *            is available
+	 * @return the shared instance
+	 */
+	public static synchronized SharedWebDriver init(WebDriver delegate) {
 		// should we replace the previous implementation silently?
 		//if (instance != null && !instance.delegate.getClass().isInstance(delegate)) {
 		//	destroy();
@@ -146,15 +169,50 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * @return the shared instance
 	 * @throws WebDriverException
 	 *             if the delegate implementation cannot be created
+	 * @deprecated As of release 0.11.0, replaced by {@link #init()}
+	 */
+	public static SharedWebDriver open() throws WebDriverException {
+		return init();
+	}
+	
+	/**
+	 * Returns the current shared instance or creates a new one using the
+	 * <i>selenium.driver</i> system property to determine the delegate
+	 * implementation.
+	 * 
+	 * @return the shared instance
+	 * @throws WebDriverException
+	 *             if the delegate implementation cannot be created
 	 */
 	@SuppressWarnings("unchecked")
-	public static SharedWebDriver open() throws WebDriverException {
+	public static SharedWebDriver init() throws WebDriverException {
+		if (instance != null) {
+			if (System.getProperty(SELENIUM_DRIVER_PROPERTY) != null && instance.getClass().getCanonicalName().equals(System.getProperty(SELENIUM_DRIVER_PROPERTY))) {
+				System.out.println("WARNING: shared WebDriver delegate instance not matching to " + System.getProperty(SELENIUM_DRIVER_PROPERTY));
+			}
+			return instance;
+		}
 		try {
 			Class<?> delegate = Class.forName(System.getProperty(SELENIUM_DRIVER_PROPERTY));
 			return open((Class<? extends WebDriver>) delegate);
 		} catch (ClassNotFoundException cnfe) {
 			throw new WebDriverException("Driver class not found", cnfe);
 		}
+	}
+	
+	/**
+	 * Returns the current shared instance or creates a new one using the
+	 * provided WebDriver implementation type to create the delegate instance.
+	 * 
+	 * @param delegate
+	 *            the WebDriver implementation type
+	 * @return the shared instance
+	 * @throws WebDriverException
+	 *             if the delegate instance cannot be created
+	 * @deprecated As of release 0.11.0, replaced by {@link #init(Class)}
+	 */
+	public static synchronized SharedWebDriver open(Class<? extends WebDriver> delegate) throws WebDriverException {
+		return init(delegate);
 	}
 
 	/**
@@ -167,7 +225,7 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * @throws WebDriverException
 	 *             if the delegate instance cannot be created
 	 */
-	public static synchronized SharedWebDriver open(Class<? extends WebDriver> delegate) throws WebDriverException {
+	public static synchronized SharedWebDriver init(Class<? extends WebDriver> delegate) throws WebDriverException {
 		// should we replace the previous implementation silently?
 		//if (instance != null && delegate != instance.delegate.getClass()) {
 		//	destroy();
