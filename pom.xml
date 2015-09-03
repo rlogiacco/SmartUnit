@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -91,7 +92,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>2.4</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -103,7 +104,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
+        <version>2.10.3</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -115,7 +116,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.10</version>
+        <version>2.18.1</version>
         <executions>
           <execution>
             <phase>integration-test</phase>
@@ -126,14 +127,26 @@
               <includes>
                 <inlude>**/*SpringIT.java</inlude>
               </includes>
+              <parallel>classes</parallel>
+              <forkCount>1C</forkCount>
+              <threadCount>1</threadCount>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.18.1</version>
+        <configuration>
+          <parallel>classes</parallel>
+          <forkCount>1C</forkCount>
+          <threadCount>1</threadCount>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.3</version>
+        <version>1.6.6</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>sonatype-nexus-staging</serverId>
@@ -298,6 +311,46 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>perf</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <inlude>**/*PerformanceIT.java</inlude>
+              </includes>
+              <systemProperties>
+                <loopCount>3</loopCount>
+                <pageCount>5</pageCount>
+              </systemProperties>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>all</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <includes>
+                <inlude>**/*ChromeIT.java</inlude>
+                <inlude>**/*FirefoxIT.java</inlude>
+                <inlude>**/*InternetExplorerIT.java</inlude>
+                <inlude>**/*SpringIT.java</inlude>
+              </includes>
+            </configuration>
           </plugin>
         </plugins>
       </build>
