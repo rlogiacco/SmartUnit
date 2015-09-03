@@ -50,7 +50,7 @@ public class ComparePerformanceIT {
 			// Create a new instance of the html unit driver
 			// Notice that the remainder of the code relies on the interface,
 			// not the implementation.
-			WebDriver browser = new HtmlUnitDriver(BrowserVersion.CHROME, true);
+			WebDriver browser = new HtmlUnitDriver(BrowserVersion.CHROME);
 
 			this.navigate(browser);
 
@@ -61,7 +61,7 @@ public class ComparePerformanceIT {
 	@Test
 	public void shared() {
 		// Initializes the shared web driver on the intended driver
-		SharedWebDriver.init(new HtmlUnitDriver(BrowserVersion.CHROME, true));
+		SharedWebDriver.init(new HtmlUnitDriver(BrowserVersion.CHROME));
 
 		for (int i = 0; i < loopCount; i++) {
 			// Obtain a new instance of the shared driver

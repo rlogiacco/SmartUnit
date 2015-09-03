@@ -276,9 +276,5 @@ public abstract class AbstractDelegatingWebDriver implements WebDriver, TakesScr
 		public String getCssValue(String propertyName) {
 			return delegate.getCssValue(propertyName);
 		}
-
-		public <X> X getScreenshotAs(OutputType<X> type) throws WebDriverException {
-			return delegate.getScreenshotAs(type);
-		}
 	}
 }
