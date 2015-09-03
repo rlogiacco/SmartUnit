@@ -26,7 +26,7 @@ public class WaitHelperInternetExplorerIT {
 	@Before
 	public void before() {
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, InternetExplorerDriver.class.getName());
-		browser = SharedWebDriver.open();
+		browser = SharedWebDriver.init();
 		browser.manage().timeouts().implicitlyWait(1, SECONDS);
 	}
 

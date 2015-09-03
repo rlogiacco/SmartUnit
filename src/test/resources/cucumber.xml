@@ -5,11 +5,17 @@
 
   <context:annotation-config/>
   
-  <bean id="driver" class="org.agileware.test.web.SharedWebDriver" factory-method="open">
+  <bean id="driver" class="org.agileware.test.web.SharedWebDriver" factory-method="init">
     <constructor-arg ref="delegate" />
   </bean>
 
   <bean id="delegate" class="org.openqa.selenium.firefox.FirefoxDriver">
     <!-- capabilities can be set here -->
   </bean>
+  
+  <beans profile="construct">
+    <bean id="driver" class="org.agileware.test.web.SharedWebDriver">
+      <constructor-arg ref="delegate" />
+    </bean>
+  </beans>
 </beans>

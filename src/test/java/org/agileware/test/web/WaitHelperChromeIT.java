@@ -25,7 +25,7 @@ public class WaitHelperChromeIT {
 	@Before
 	public void before() {
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, ChromeDriver.class.getName());
-		browser = SharedWebDriver.open();
+		browser = SharedWebDriver.init();
 	}
 
 	@Test

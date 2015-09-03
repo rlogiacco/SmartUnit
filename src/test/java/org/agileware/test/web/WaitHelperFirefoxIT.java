@@ -25,7 +25,7 @@ public class WaitHelperFirefoxIT {
 	@Before
 	public void before() {
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, FirefoxDriver.class.getName());
-		browser = SharedWebDriver.open();
+		browser = SharedWebDriver.init();
 	}
 
 	@Test

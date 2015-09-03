@@ -30,52 +30,52 @@ public class SharedWebDriverChromeIT {
 	}
 
 	@Test
-	public void open() {
-		browser = SharedWebDriver.open();
+	public void init() {
+		browser = SharedWebDriver.init();
 
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
-		SharedWebDriver.open();
+		SharedWebDriver.init();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
 
 	@Test(expected = WebDriverException.class)
-	public void openFails() {
+	public void initFails() {
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, "some.non.existing.Class");
-		browser = SharedWebDriver.open();
+		browser = SharedWebDriver.init();
 	}
 
 	@Test
-	public void openWithDriverInstance() throws Throwable {
-		browser = SharedWebDriver.open(driver.newInstance());
+	public void initWithDriverInstance() throws Throwable {
+		browser = SharedWebDriver.init(driver.newInstance());
 
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
-		SharedWebDriver.open();
+		SharedWebDriver.init();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
 
 	@Test
-	public void openWithDriverClass() throws Throwable {
-		browser = SharedWebDriver.open(driver);
+	public void initWithDriverClass() throws Throwable {
+		browser = SharedWebDriver.init(driver);
 
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
-		SharedWebDriver.open();
+		SharedWebDriver.init();
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		Assert.assertTrue(browser.getWindowHandles().contains(original));
 	}
 
 	@Test(expected = WebDriverException.class)
-	public void openWithDriverClassFailing() throws Throwable {
-		browser = SharedWebDriver.open(AbstractDelegatingWebDriver.class);
+	public void initWithDriverClassFailing() throws Throwable {
+		browser = SharedWebDriver.init(AbstractDelegatingWebDriver.class);
 	}
 
 	@Test
 	public void close() throws Exception {
-		browser = SharedWebDriver.open(driver);
+		browser = SharedWebDriver.init(driver);
 
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
@@ -91,7 +91,7 @@ public class SharedWebDriverChromeIT {
 
 	@Test
 	public void quit() throws Exception {
-		browser = SharedWebDriver.open(driver);
+		browser = SharedWebDriver.init(driver);
 
 		Assert.assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
@@ -118,15 +118,16 @@ public class SharedWebDriverChromeIT {
 
 	@Test
 	public void destroy() throws Throwable {
-		browser = SharedWebDriver.open(driver);
+		browser = SharedWebDriver.init(driver);
 		SharedWebDriver.destroy();
-		SharedWebDriver.open((WebDriver) null);
+		SharedWebDriver.init((WebDriver) null);
 		SharedWebDriver.destroy();
 		SharedWebDriver.destroy();
 	}
 
+	@Test
 	public void perf() throws Exception {
-		browser = SharedWebDriver.open(driver);
+		browser = SharedWebDriver.init(driver);
 		browser.get("http://www.google.com");
 		long elapsed = (Long) browser.executeScript("return (performance.timing.loadEventEnd - performance.timing.connectStart)");
 		Assert.assertTrue(elapsed > 0);

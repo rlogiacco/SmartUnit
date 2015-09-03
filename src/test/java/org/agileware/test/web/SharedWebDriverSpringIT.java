@@ -2,6 +2,7 @@ package org.agileware.test.web;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -13,7 +14,5 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(glue = "org.agileware.test.web.stepdefs", features = "classpath:sample.feature", format = "html:target/cucumber")
 public class SharedWebDriverSpringIT {
-
-	@Autowired
-	private SharedWebDriver browser;
+	
 }
