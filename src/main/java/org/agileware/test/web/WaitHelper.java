@@ -147,7 +147,7 @@ public class WaitHelper {
 	 * @return a <code>WaitHelper</code> instance operating on the above
 	 *         parameters
 	 */
-	public static WaitHelper waitOn(SearchContext context, long timeout, TimeUnit timeUnit, long interval) {
+	public static WaitHelper waitOn(SearchContext context, long timeout, @NonNull TimeUnit timeUnit, long interval) {
 		return new WaitHelper(context, timeout, timeUnit, interval);
 	}
 
