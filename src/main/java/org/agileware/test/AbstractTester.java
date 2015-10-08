@@ -37,7 +37,9 @@ import java.util.TreeSet;
 
 import org.mockito.Mockito;
 
-public abstract class AbstractTester<T extends AbstractTester<T>> {
+import lombok.NonNull;
+
+public abstract class AbstractTester<T extends AbstractTester<?>> {
 
 	protected Map<Class<?>, ValueBuilder<?>> mappings = new HashMap<Class<?>, ValueBuilder<?>>();
 
@@ -261,7 +263,7 @@ public abstract class AbstractTester<T extends AbstractTester<T>> {
      *            the value to be used when testing
      * @return the <code>AbstractTester</code> instance
 	 */
-	public <V, W extends V> T addMapping(Class<V> type, final W value) {
+	public <V, W extends V> T addMapping(@NonNull Class<V> type, final W value) {
 		mappings.put(type, new ValueBuilder<Object>() {
 
 			public Object build() {
@@ -290,9 +292,9 @@ public abstract class AbstractTester<T extends AbstractTester<T>> {
      *            the value to be used when testing
      * @return the <code>AbstractTester</code> instance
 	 */
-	public <V, W extends V> T addMapping(Class<V> type, ValueBuilder<W> builder) {
+	public <V, W extends V> T addMapping(@NonNull Class<V> type, ValueBuilder<W> builder) {
 		mappings.put(type, builder);
-		return (T) this;
+		return (T)this;
 	}
 
 	protected Object getInstance(final Class<?> type) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {

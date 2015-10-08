@@ -19,6 +19,8 @@ package org.agileware.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import lombok.NonNull;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -33,12 +35,12 @@ import java.util.List;
  */
 public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 
-	public ConstructorsTester testAll(Class<? extends Exception> type) throws Exception {
+	public ConstructorsTester testAll(@NonNull Class<? extends Exception> type) throws Exception {
 		this.testAllConstructors(type, false);
 		return this;
 	}
 
-	public ConstructorsTester testAllConstructors(Class<? extends Exception> type, boolean lenient) throws Exception {
+	public ConstructorsTester testAllConstructors(@NonNull Class<? extends Exception> type, boolean lenient) throws Exception {
 		Constructor<?>[] constructors = type.getConstructors();
 		for (Constructor<?> constructor : constructors) {
 			List<Object> params = new ArrayList<Object>();
@@ -59,7 +61,7 @@ public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 	 * @exception Exception - If anything goes wrong.
      * @return the <code>ConstructorTester</code> instance
 	 */
-	public ConstructorsTester testConstructorIsPrivate(Class<?> type) throws Exception {
+	public ConstructorsTester testConstructorIsPrivate(@NonNull Class<?> type) throws Exception {
 		Constructor<?>[] constructors = type.getDeclaredConstructors();
 		assertNotNull(constructors);
 		assertEquals(1, constructors.length);
@@ -72,12 +74,12 @@ public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 	}
 	
 
-	public ConstructorsTester test(Class<?> type, Class<?>[] paramTypes, Object[] params) throws Exception {
+	public ConstructorsTester test(@NonNull Class<?> type, @NonNull Class<?>[] paramTypes, @NonNull Object[] params) throws Exception {
 		this.test(type, paramTypes, params, false);
 		return this;
 	}
 
-	public ConstructorsTester test(Class<?> type, Class<?>[] paramTypes, Object[] params, boolean lenient) throws Exception {
+	public ConstructorsTester test(@NonNull Class<?> type, @NonNull Class<?>[] paramTypes, @NonNull Object[] params, boolean lenient) throws Exception {
 		assertNotNull(paramTypes);
 		assertNotNull(params);
 		Constructor<?> constructor = type.getConstructor(paramTypes);
@@ -88,10 +90,8 @@ public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 				this.testParameter(instance, paramTypes[i], params[i], fields, lenient);
 			}
 		} catch (InstantiationException ie) {
-			System.out.println("InstantiationException");
 			throw new AssertionError("Instantiation failed: " + ie);
 		} catch (InvocationTargetException ite) {
-			System.out.println("InvocationTargetException");
 			throw new AssertionError("An exception has been thrown during instantiation: " + ite.getCause());
 		}
 		return this;
