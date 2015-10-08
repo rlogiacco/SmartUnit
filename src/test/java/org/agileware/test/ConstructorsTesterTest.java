@@ -5,6 +5,10 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+/**
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *
+ */
 public class ConstructorsTesterTest {
 
     @Test

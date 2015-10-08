@@ -21,6 +21,11 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+
+/**
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *
+ */
 public class AbstractDelegatingWebDriverTest {
 
 	private static interface TakesScreenshotWebDriver extends WebDriver, TakesScreenshot {

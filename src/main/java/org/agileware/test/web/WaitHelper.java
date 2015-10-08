@@ -70,8 +70,10 @@ public class WaitHelper {
 	 *            the maximum wait duration
 	 * @param timeUnit
 	 *            the maximum wait time unit
+	 * @param interval
+	 *            the polling interval in milliseconds
 	 */
-	protected WaitHelper(@NonNull SearchContext context, long timeout, long interval, @NonNull TimeUnit timeUnit) {
+	protected WaitHelper(@NonNull SearchContext context, long timeout, @NonNull TimeUnit timeUnit, long interval) {
 		this.context = context;
 		this.timeout = timeout;
 		this.interval = interval;
@@ -86,7 +88,7 @@ public class WaitHelper {
 	 *         parameters
 	 */
 	public static WaitHelper waitOn(SearchContext context) {
-		return waitOn(context, defaultTimeout, TimeUnit.MILLISECONDS);
+		return new WaitHelper(context, defaultTimeout, TimeUnit.MILLISECONDS, defaultInterval);
 	}
 
 	/**
@@ -99,7 +101,7 @@ public class WaitHelper {
 	 *         parameters
 	 */
 	public static WaitHelper waitOn(SearchContext context, long timeout) {
-		return waitOn(context, timeout, TimeUnit.MILLISECONDS);
+		return new WaitHelper(context, timeout, TimeUnit.MILLISECONDS, defaultInterval);
 	}
 
 	/**
@@ -114,7 +116,7 @@ public class WaitHelper {
 	 *         parameters
 	 */
 	public static WaitHelper waitOn(SearchContext context, long timeout, long interval) {
-		return waitOn(context, timeout, interval, TimeUnit.MILLISECONDS);
+		return new WaitHelper(context, timeout, TimeUnit.MILLISECONDS, defaultInterval);
 	}
 
 	/**
@@ -128,8 +130,8 @@ public class WaitHelper {
 	 * @return a <code>WaitHelper</code> instance operating on the above
 	 *         parameters
 	 */
-	public static WaitHelper waitOn(SearchContext context, long timeout, TimeUnit timeUnit) {
-		return new WaitHelper(context, timeout, defaultInterval, timeUnit);
+	public static WaitHelper waitOn(SearchContext context, long timeout, @NonNull TimeUnit timeUnit) {
+		return new WaitHelper(context, timeout, timeUnit, defaultInterval);
 	}
 
 	/**
@@ -138,15 +140,15 @@ public class WaitHelper {
 	 *            search root
 	 * @param timeout
 	 *            the maximum wait duration
+	 * @param timeUnit
+	 *            the maximum wait time unit
 	 * @param interval
 	 *            the polling interval in milliseconds
-	 * @param timeUnit
-	 *            the maximum wait time unit
 	 * @return a <code>WaitHelper</code> instance operating on the above
 	 *         parameters
 	 */
-	public static WaitHelper waitOn(SearchContext context, long timeout, long interval, TimeUnit timeUnit) {
-		return new WaitHelper(context, timeout, interval, timeUnit);
+	public static WaitHelper waitOn(SearchContext context, long timeout, TimeUnit timeUnit, long interval) {
+		return new WaitHelper(context, timeout, timeUnit, interval);
 	}
 
 	/**

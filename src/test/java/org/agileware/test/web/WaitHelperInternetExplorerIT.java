@@ -19,15 +19,20 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+
+/**
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *
+ */
 public class WaitHelperInternetExplorerIT {
-	
+
 	private WebDriver browser;
 
 	@Before
 	public void before() {
 		System.setProperty(SharedWebDriver.SELENIUM_DRIVER_PROPERTY, InternetExplorerDriver.class.getName());
 		browser = SharedWebDriver.init();
-		browser.manage().timeouts().implicitlyWait(1, SECONDS);
+		WaitHelper.setDefaultInterval(250);
 	}
 
 	@Test
@@ -67,7 +72,7 @@ public class WaitHelperInternetExplorerIT {
 	@Test
 	public void testUntilVisible() {
 		browser.get(SharedWebDriverTest.TEST_PAGE);
-		((SharedWebDriver)browser).getDelegate().findElement(By.id("delayed")).click();
+		((SharedWebDriver) browser).getDelegate().findElement(By.id("delayed")).click();
 		browser.findElement(By.id("delayed")).click();
 		try {
 			browser.findElement(By.id("wait-if"));
@@ -102,7 +107,7 @@ public class WaitHelperInternetExplorerIT {
 		assertFalse(browser.findElement(By.id("wait-enable")).isEnabled());
 		assertEquals("1", browser.findElement(By.id("counter")).getText());
 	}
-	
+
 	@Test
 	public void testUntil() {
 		browser.get(SharedWebDriverTest.TEST_PAGE);
@@ -112,7 +117,7 @@ public class WaitHelperInternetExplorerIT {
 		waitOn(browser, 6, SECONDS).until(By.name("counter"), Matchers.text(new IsEqual<String>("1")));
 		assertEquals("1", browser.findElement(By.name("counter")).getText());
 	}
-	
+
 	@Test(expected = TimeoutException.class)
 	public void testUntilExpires() {
 		browser.get(SharedWebDriverTest.TEST_PAGE);
@@ -121,7 +126,7 @@ public class WaitHelperInternetExplorerIT {
 		assertEquals("0", browser.findElement(By.name("counter")).getText());
 		waitOn(browser, 6, SECONDS).until(By.name("counter"), Matchers.text(new IsEqual<String>("2")));
 	}
-	
+
 	@Test
 	public void testUntilCount() {
 		browser.get(SharedWebDriverTest.TEST_PAGE);
@@ -130,7 +135,7 @@ public class WaitHelperInternetExplorerIT {
 		waitOn(browser, 6, SECONDS).untilCount(By.className("wait"), Matchers.exactly(3));
 		assertEquals(3, browser.findElements(By.className("wait")).size());
 	}
-	
+
 	@Test
 	public void testUntilCountIs() {
 		browser.get(SharedWebDriverTest.TEST_PAGE);

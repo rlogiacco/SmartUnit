@@ -17,6 +17,10 @@ import java.util.Set;
 
 import org.junit.Test;
 
+/**
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *
+ */
 public class PropertiesTesterTest {
 
     @Test(expected=NoSuchMethodException.class)

@@ -21,6 +21,8 @@ import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
+import lombok.Synchronized;
+
 /**
  * This is a Selenium WebDriver implementation to be used as a wrapper for any
  * real web browser driver implementation to prevent a new web browser window to
@@ -135,7 +137,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * @return the shared instance
 	 * @deprecated As of release 0.11.0, replaced by {@link #init(WebDriver)}
 	 */
-	public static synchronized SharedWebDriver open(WebDriver delegate) {
+	@Synchronized
+	public static SharedWebDriver open(WebDriver delegate) {
 		return init(delegate);
 	}
 	
@@ -148,7 +151,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 *            is available
 	 * @return the shared instance
 	 */
-	public static synchronized SharedWebDriver init(WebDriver delegate) {
+	@Synchronized
+	public static SharedWebDriver init(WebDriver delegate) {
 		// should we replace the previous implementation silently?
 		//if (instance != null && !instance.delegate.getClass().isInstance(delegate)) {
 		//	destroy();
@@ -171,6 +175,7 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 *             if the delegate implementation cannot be created
 	 * @deprecated As of release 0.11.0, replaced by {@link #init()}
 	 */
+	@Synchronized
 	public static SharedWebDriver open() throws WebDriverException {
 		return init();
 	}
@@ -184,6 +189,7 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * @throws WebDriverException
 	 *             if the delegate implementation cannot be created
 	 */
+	@Synchronized
 	@SuppressWarnings("unchecked")
 	public static SharedWebDriver init() throws WebDriverException {
 		if (instance != null) {
@@ -211,7 +217,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 *             if the delegate instance cannot be created
 	 * @deprecated As of release 0.11.0, replaced by {@link #init(Class)}
 	 */
-	public static synchronized SharedWebDriver open(Class<? extends WebDriver> delegate) throws WebDriverException {
+	@Synchronized
+	public static SharedWebDriver open(Class<? extends WebDriver> delegate) throws WebDriverException {
 		return init(delegate);
 	}
 
@@ -225,7 +232,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * @throws WebDriverException
 	 *             if the delegate instance cannot be created
 	 */
-	public static synchronized SharedWebDriver init(Class<? extends WebDriver> delegate) throws WebDriverException {
+	@Synchronized
+	public static SharedWebDriver init(Class<? extends WebDriver> delegate) throws WebDriverException {
 		// should we replace the previous implementation silently?
 		//if (instance != null && delegate != instance.delegate.getClass()) {
 		//	destroy();
@@ -247,7 +255,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * 
 	 * @see org.openqa.selenium.WebDriver#close()
 	 */
-	public synchronized void close() {
+	@Synchronized
+	public void close() {
 		// Prevent closing the browser instance: the shutdown hook will do it
 		if (delegate.getWindowHandles().size() > 1) {
 			delegate.close();
@@ -260,7 +269,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * 
 	 * @see org.openqa.selenium.WebDriver#quit()
 	 */
-	public synchronized void quit() {
+	@Synchronized
+	public void quit() {
 		// Prevent closing the browser instance: the shutdown hook will do it
 		String[] handles = delegate.getWindowHandles().toArray(new String[delegate.getWindowHandles().size()]);
 		String current = handles[0];
@@ -285,7 +295,8 @@ public class SharedWebDriver extends AbstractDelegatingWebDriver {
 	 * method you might want to reconsider the usage of this WebDriver
 	 * implementation.
 	 */
-	public static synchronized void destroy() {
+	@Synchronized
+	public static void destroy() {
 		if (instance != null) {
 			if (instance.delegate != null) {
 				try {

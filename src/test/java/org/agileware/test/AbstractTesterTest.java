@@ -10,6 +10,10 @@ import java.util.Date;
 
 import org.junit.Test;
 
+/**
+ * @author Roberto Lo Giacco <rlogiacco@gmail.com>
+ *
+ */
 public class AbstractTesterTest {
 
     private AbstractTester<Mock> tester = new Mock();
