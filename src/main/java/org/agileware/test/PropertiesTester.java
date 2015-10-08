@@ -28,8 +28,10 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import lombok.NonNull;
+
 /**
- * This is a utility class to test bean properties accessor methods.
+ * This is a utility class to test bean properties' accessor methods.
  * 
  */
 public class PropertiesTester extends AbstractTester<PropertiesTester> {
@@ -58,7 +60,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the list of property names you want to exclude.
      * @return the <code>PropertiesTester</code> instance.
      */
-    public PropertiesTester setNameExclusions(final String... names) {
+    public PropertiesTester setNameExclusions(final @NonNull String... names) {
         excludesByName = Arrays.asList(names);
         return this;
     }
@@ -71,7 +73,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the list of types you want to be excluded from properties testing.
      * @return the <code>PropertiesTester</code> instance.
      */
-    public PropertiesTester setTypeExclusions(final Class<?>... types) {
+    public PropertiesTester setTypeExclusions(final @NonNull Class<?>... types) {
         excludesByType = Arrays.asList(types);
         return this;
     }
@@ -106,7 +108,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            mapping and multiple mappings can be set.
      * @return the <code>PropertiesTester</code> instance.
      */
-    public PropertiesTester setNameMappings(final String[]... mappings) {
+    public PropertiesTester setNameMappings(final @NonNull String[]... mappings) {
         for (String[] mapping : mappings) {
             Assert.assertTrue("A mapping is defined by an array of 2 strings minimum", mapping.length > 1);
             Collection<String> properties = nameMappings.get(mapping[0]);
@@ -134,7 +136,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *             thrown if any of the tests fail.
      * @return the <code>PropertiesTester</code> instance.
      */
-    public PropertiesTester testAll(Class<?> type) throws Exception {
+    public PropertiesTester testAll(@NonNull Class<?> type) throws Exception {
         this.testAll(type, true);
         return this;
     }
@@ -154,7 +156,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *             thrown if any of the tests fail.
      * @return the <code>PropertiesTester</code> instance.
      */
-    public PropertiesTester testAll(Class<?> type, boolean definedOnly) throws Exception {
+    public PropertiesTester testAll(@NonNull Class<?> type, boolean definedOnly) throws Exception {
         Object instance = this.getInstance(type);
         for (Field field : type.getDeclaredFields()) {
             this.testField(instance, type, field);
@@ -180,7 +182,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *             thrown if any of the tests fail.
      * @return the <code>PropertiesTester</code> instance.
      */
-    public PropertiesTester test(Class<?> type, String fieldName, Object value) throws Exception {
+    public PropertiesTester test(@NonNull Class<?> type, @NonNull String fieldName, @NonNull Object value) throws Exception {
         Field field = type.getDeclaredField(fieldName);
         Object instance = this.getInstance(type);
         this.testField(instance, type, field);
