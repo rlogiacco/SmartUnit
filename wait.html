@@ -44,7 +44,7 @@
 
 <script>
 angular.module('app', [])
-.controller('TestCtrl', function($scope, $timeout, $http) {
+.controller('TestCtrl', function($scope, $timeout, $http, $sce) {
   $scope.counter = 0;
   $scope.wait = false;
 
@@ -96,7 +96,7 @@ angular.module('app', [])
   
   $scope.lookup = function() {
     $http.get('http://httpbin.org/encoding/utf8').then(function success(response) {
-      $scope.output = response.data;
+    	$scope.output = $sce.trustAsHtml(response.data);
     }, function error(response) {
       $scope.output = data;
     });
