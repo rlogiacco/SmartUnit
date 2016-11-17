@@ -34,6 +34,11 @@
         <td>{{item.topping.join(",")}}</td>
       </tr>
     </table>
+    
+    <input id='lookup' type="button" ng-click='lookup()' value='go get it' />
+    <div id='output'>{{output}}</div>
+    <a id="link" href="http://httpbin.org/encoding/utf8">link</a>
+    
   </div>
 </body>
 
@@ -65,8 +70,7 @@ angular.module('app', [])
       $scope.$apply();
     }, 4000);
   };
-
-
+  
   $scope.items = [{
     "id": "0001",
     "type": "donut",
@@ -88,7 +92,15 @@ angular.module('app', [])
     "ppu": 0.55,
     "batters": ["Regular", "Chocolate"],
     "topping": ["None", "Glazed", "Chocolate", "Maple"]
-  }]
+  }];
+  
+  $scope.lookup = function() {
+    $http.get('http://httpbin.org/encoding/utf8').then(function success(response) {
+      $scope.output = response.data;
+    }, function error(response) {
+      $scope.output = data;
+    });
+  };
 
 })
 </script>
