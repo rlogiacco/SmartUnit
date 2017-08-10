@@ -244,6 +244,20 @@ public class PropertiesTesterTest {
 		});
         tester.testAll(Simple.class);
     }
+    
+    @Test
+    public void testWithInner() throws Exception {
+        PropertiesTester tester = new PropertiesTester();
+        tester.testAll(WithInner.class);
+        tester.testAll(WithInner.StaticInner.class);
+        tester.addMapping(WithInner.DynamicInner.class, new ValueBuilder<WithInner.DynamicInner>() {
+			
+			public WithInner.DynamicInner build() {
+				return new WithInner().new DynamicInner();
+			}
+		});
+        tester.testAll(WithInner.DynamicInner.class);
+    }
 
     public static class Simple {
 
@@ -593,5 +607,42 @@ public class PropertiesTesterTest {
     	public Object getSecond() {
     		return first;
     	}
+    }
+    
+    public static class WithInner {
+    	private String property;
+
+		public String isProperty() {
+			return property;
+		}
+
+		public void setProperty(String property) {
+			this.property = property;
+		}
+		
+		public static class StaticInner {
+	    	private String property;
+
+			public String isProperty() {
+				return property;
+			}
+
+			public void setProperty(String property) {
+				this.property = property;
+			}
+	    }
+		
+		public class DynamicInner {
+	    	private String property;
+
+			public String isProperty() {
+				return property;
+			}
+
+			public void setProperty(String property) {
+				this.property = property;
+			}
+	    }
+
     }
 }
