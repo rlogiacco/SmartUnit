@@ -263,6 +263,7 @@ public abstract class AbstractTester<T extends AbstractTester<?>> {
      *            the value to be used when testing
      * @return the <code>AbstractTester</code> instance
 	 */
+	@SuppressWarnings("unchecked")
 	public <V, W extends V> T addMapping(@NonNull Class<V> type, final W value) {
 		mappings.put(type, new ValueBuilder<Object>() {
 
@@ -292,6 +293,7 @@ public abstract class AbstractTester<T extends AbstractTester<?>> {
      *            the value to be used when testing
      * @return the <code>AbstractTester</code> instance
 	 */
+	@SuppressWarnings("unchecked")
 	public <V, W extends V> T addMapping(@NonNull Class<V> type, ValueBuilder<W> builder) {
 		mappings.put(type, builder);
 		return (T)this;
