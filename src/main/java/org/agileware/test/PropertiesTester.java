@@ -159,11 +159,11 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
     public PropertiesTester testAll(@NonNull Class<?> type, boolean definedOnly) throws Exception {
         Object instance = this.getInstance(type);
         for (Field field : type.getDeclaredFields()) {
-            this.testField(instance, type, field);
+            this.testField(instance, type, field, null);
         }
         if (!definedOnly) {
             for (Field field : this.listInherithed(type, type.getSuperclass(), new HashSet<Field>())) {
-                this.testField(instance, type, field);
+                this.testField(instance, type, field, null);
             }
         }
         return this;
@@ -185,7 +185,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
     public PropertiesTester test(@NonNull Class<?> type, @NonNull String fieldName, @NonNull Object value) throws Exception {
         Field field = type.getDeclaredField(fieldName);
         Object instance = this.getInstance(type);
-        this.testField(instance, type, field);
+        this.testField(instance, type, field, value);
         return this;
     }
 
@@ -201,16 +201,16 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    private void testField(Object instance, Class<?> type, Field field) throws Exception {
-        this.testField(instance, type, field, field.getName());
+    private void testField(Object instance, Class<?> type, Field field, Object value) throws Exception {
+        this.testField(instance, type, field, field.getName(), value);
         if (nameMappings.containsKey(field.getName())) {
             for (String property : nameMappings.get(field.getName())) {
-                this.testField(instance, type, field, property);
+                this.testField(instance, type, field, property, value);
             }
         }
         if (nameMappings.containsKey("#" + field.getName())) {
             for (String property : nameMappings.get("#" + field.getName())) {
-                this.testField(instance, type, field, property);
+                this.testField(instance, type, field, property, value);
             }
         }
     }
@@ -229,11 +229,12 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      * @throws Exception
      *             thrown if any of the tests fail.
      */
-    private void testField(Object instance, Class<?> type, Field field, final String property) throws Exception {
+    private void testField(Object instance, Class<?> type, Field field, final String property, Object value) throws Exception {
         Method setter = this.getSetter(type, property, field.getType(), false);
         Method getter = this.getGetter(type, property, field.getType(), false);
         if (setter != null && getter != null) {
-            Object value = this.getInstance(field.getType());
+        	if (value == null)
+        		value = this.getInstance(field.getType());
             setter.invoke(instance, value);
             Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
             if (!field.getType().isPrimitive()) {
@@ -242,7 +243,8 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
             }
         } else {
             if (setter != null) {
-                Object value = this.getInstance(field.getType());
+            	if (value == null)
+            		value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 setter.invoke(instance, value);
                 Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
@@ -252,7 +254,8 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
                 }
             }
             if (getter != null) {
-                Object value = this.getInstance(field.getType());
+            	if (value == null)
+            		value = this.getInstance(field.getType());
                 field.setAccessible(true);
                 field.set(instance, value);
                 Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
