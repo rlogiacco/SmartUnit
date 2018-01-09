@@ -17,6 +17,7 @@ package org.agileware.test;
  */
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.junit.Assert;
 
@@ -188,7 +191,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
         this.testField(instance, type, field, value);
         return this;
     }
-
+    
     /**
      * Performs a field check including field name mappings.
      * 
@@ -198,6 +201,8 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the class under test.
      * @param field
      *            the field to test.
+     * @param value 
+     *            the value used to test the field.
      * @throws Exception
      *             thrown if any of the tests fail.
      */
@@ -226,6 +231,8 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the field to test.
      * @param property
      *            the property to test.
+     * @param value 
+     *            the value used to instantiate the property.
      * @throws Exception
      *             thrown if any of the tests fail.
      */
@@ -233,37 +240,115 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
         Method setter = this.getSetter(type, property, field.getType(), false);
         Method getter = this.getGetter(type, property, field.getType(), false);
         if (setter != null && getter != null) {
-        	if (value == null)
-        		value = this.getInstance(field.getType());
-            setter.invoke(instance, value);
-            Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
-            if (!field.getType().isPrimitive()) {
-            	setter.invoke(instance, field.getType().cast(null));
-            	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
-            }
+            testSetterGetterInteraction(instance, field, setter, getter, value);
         } else {
             if (setter != null) {
-            	if (value == null)
-            		value = this.getInstance(field.getType());
-                field.setAccessible(true);
-                setter.invoke(instance, value);
-                Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, field.get(instance));
-                if (!field.getType().isPrimitive()) {
-                	setter.invoke(instance, field.getType().cast(null));
-                	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, field.get(instance));
-                }
+                testSetter(instance, field, setter, value);
             }
             if (getter != null) {
-            	if (value == null)
-            		value = this.getInstance(field.getType());
-                field.setAccessible(true);
-                field.set(instance, value);
-                Assert.assertEquals("Field test failed on `" + field.getName() + "`", value, getter.invoke(instance));
-                if (!field.getType().isPrimitive()) {
-                	field.set(instance, null);
-                	Assert.assertEquals("Null field test failed on `" + field.getName() + "`", null, getter.invoke(instance));
-                }
+                testGetter(instance, field, getter, value);
             }
+        }
+    }
+
+    /**
+     * This method tests the interaction between a fields setter and getter methods
+     * @param instance the instance on which to invoke calls
+     * @param field the field under test
+     * @param setter the setter method to invoke
+     * @param getter the getter method to invoke
+     * @param value the value passed to setter method, and expected to return from getter method invocation
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException 
+     */
+    private void testSetterGetterInteraction(Object instance, Field field, Method setter, Method getter, Object value) throws InstantiationException, IllegalAccessException, IllegalArgumentException, NoSuchMethodException, InvocationTargetException {
+        Object getterInvocationResult;
+        if (value == null){
+            value = this.getInstance(field.getType());
+        }
+        setter.invoke(instance, value);
+        getterInvocationResult = getter.invoke(instance);
+        if(Optional.class.isInstance(getterInvocationResult) && !Optional.class.isInstance(value)){
+            Assert.assertTrue("Setter-Getter interaction for field test failed on `" + field.getName() + "`, expected none empty Optional", Optional.class.cast(getterInvocationResult).isPresent());
+            Assert.assertEquals("Setter-Getter interaction for field test failed on `" + field.getName() + "`, expected Optional.get() to return: " + value, value, Optional.class.cast(getterInvocationResult).orElse(null));
+        }else{
+            Assert.assertEquals("Setter-Getter interaction for field test failed on `" + field.getName() + "`", value, getterInvocationResult);
+        }
+        if (!field.getType().isPrimitive()) {
+            setter.invoke(instance, field.getType().cast(null));
+            getterInvocationResult = getter.invoke(instance);
+            if (Optional.class.isInstance(getterInvocationResult)) {
+                Assert.assertEquals("Setter-Getter interaction for null field test failed on `" + field.getName() + "`, expected empty Optional", Optional.empty(), getterInvocationResult);
+            }else{
+                Assert.assertEquals("Setter-Getter interaction for null field test failed on `" + field.getName() + "`", null, getterInvocationResult);
+            }
+        }
+    }
+
+    /**
+     * This method tests a field getter method
+     * @param instance the instance on which to invoke calls 
+     * @param field the field under test
+     * @param getter the getter method to invoke
+     * @param value the expected value to return from getter invocation
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws IllegalArgumentException
+     * @throws InstantiationException
+     * @throws SecurityException
+     * @throws IllegalAccessException 
+     */
+    private void testGetter(Object instance, Field field, Method getter, Object value) throws InvocationTargetException, NoSuchMethodException, IllegalArgumentException, InstantiationException, SecurityException, IllegalAccessException {
+        Object getterInvocationResult;
+        if (value == null){
+            value = this.getInstance(field.getType());
+        }
+        field.setAccessible(true);
+        field.set(instance, value);
+        getterInvocationResult = getter.invoke(instance);
+        if (Optional.class.isInstance(getterInvocationResult) && !Optional.class.isInstance(value)) {
+            Assert.assertTrue("Getter for field test failed on `" + field.getName() + "`, expected none empty Optional", Optional.class.cast(getterInvocationResult).isPresent());
+            Assert.assertEquals("Getter for field test failed on `" + field.getName() + "`, expected Optional.get() to return: " + value, value, Optional.class.cast(getterInvocationResult).orElse(null));
+        }else{
+            Assert.assertEquals("Getter for field test failed on `" + field.getName() + "`", value, getterInvocationResult);
+        }
+        if (!field.getType().isPrimitive()) {
+            field.set(instance, null);
+            getterInvocationResult = getter.invoke(instance);
+            if(Optional.class.isInstance(getterInvocationResult)){
+                Assert.assertEquals("Getter for null field test failed on `" + field.getName() + "`, expected empty Optional", Optional.empty(), getterInvocationResult);
+            }else{
+                Assert.assertEquals("Getter for null field test failed on `" + field.getName() + "`", null, getterInvocationResult);
+            }
+        }
+    }
+
+    /**
+     * This method test a field setter method
+     * @param instance the instance on which to invoke calls
+     * @param field the field under test
+     * @param setter the setter method to invoke
+     * @param value the value passed to setter method invocation
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws IllegalArgumentException
+     * @throws SecurityException 
+     */
+    private void testSetter(Object instance, Field field, Method setter, Object value) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException, IllegalArgumentException, SecurityException {
+        if (value == null){
+            value = this.getInstance(field.getType());
+        }
+        field.setAccessible(true);
+        setter.invoke(instance, value);
+        Assert.assertEquals("Setter for field test failed on `" + field.getName() + "`", value, field.get(instance));
+        if (!field.getType().isPrimitive()) {
+            setter.invoke(instance, field.getType().cast(null));
+            Assert.assertEquals("Setter for null field test failed on `" + field.getName() + "`", null, field.get(instance));
         }
     }
 
@@ -366,7 +451,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
                 }
             }
         }
-        if (method != null && !method.getReturnType().equals(propertyType)) {
+        if (method != null && !(method.getReturnType().equals(propertyType) || method.getReturnType().equals(Optional.class))) {
             method = null;
         }
         return method;
@@ -381,7 +466,7 @@ public class PropertiesTester extends AbstractTester<PropertiesTester> {
      *            the property name.
      * @return the camel case concatenation of prefix and property.
      */
-    private final String getMethodName(final String prefix, final String property) {
+    private String getMethodName(final String prefix, final String property) {
         return prefix + Character.toUpperCase(property.charAt(0)) + property.substring(1);
     }
 }

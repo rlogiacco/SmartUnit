@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Test;
@@ -257,6 +258,53 @@ public class PropertiesTesterTest {
 			}
 		});
         tester.testAll(WithInner.DynamicInner.class);
+    }
+    
+    @Test
+    public void testWithOptionalGetter_actualValue_shouldSucceed() throws Exception{
+        PropertiesTester tester = new PropertiesTester();
+        
+        class withOptionalGetter {
+            private String field;
+            public Optional<String> getFieldWithOptionalGetter() {return Optional.ofNullable(field);}
+            public void setFieldWithOptionalGetter(String fieldWithOptionalGetter) {this.field = fieldWithOptionalGetter;}
+        }
+        
+        tester.addMapping(withOptionalGetter.class, new withOptionalGetter());
+        
+        tester.testAll(withOptionalGetter.class);
+        tester.test(withOptionalGetter.class, "field", "testValue");
+    }
+    
+    @Test
+    public void testWithOptionalField_emptyOptional_shouldSucceed() throws Exception {
+        PropertiesTester tester = new PropertiesTester();
+        
+        class withOptionalField {
+            private Optional<?> field;
+            public Optional<?> getOptionalField() {return field;}
+            public void setOptionalField(Optional<?> optionalField) {this.field = optionalField;}
+        }
+        
+        tester.addMapping(withOptionalField.class, new withOptionalField());
+        
+        tester.testAll(withOptionalField.class);
+        tester.test(withOptionalField.class, "field", Optional.empty());
+    }
+    
+    @Test(expected = AssertionError.class)
+    public void testOptionalGetter_missmatchedReturnValue_shouldFail() throws Exception {
+        
+        PropertiesTester tester = new PropertiesTester();
+        
+        class WithEmptyOptionalGetter{
+            private String field;
+            public Optional<String> getField() {return Optional.empty();}
+            public void setField(String field) {this.field = field;}
+        }
+        
+        tester.addMapping(WithEmptyOptionalGetter.class, new WithEmptyOptionalGetter());
+        tester.testAll(WithEmptyOptionalGetter.class);
     }
 
     public static class Simple {
