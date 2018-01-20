@@ -124,7 +124,7 @@ public class SharedWebDriverTest {
 	@Test
 	public void close() throws Exception {
 		browser = SharedWebDriver.init(new HtmlUnitDriver(true));
-		browser.get("http://www.google.com");
+		browser.get("https://github.com/");
 
 		assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
@@ -141,7 +141,7 @@ public class SharedWebDriverTest {
 	@Test
 	public void quit() throws Exception {
 		browser = SharedWebDriver.init(new HtmlUnitDriver(true));
-		browser.get("http://www.google.com");
+		browser.get("https://github.com/");
 
 		assertEquals(1, browser.getWindowHandles().size());
 		String original = browser.getWindowHandle();
