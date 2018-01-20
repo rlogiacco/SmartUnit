@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 import org.junit.Test;
 
@@ -261,7 +263,7 @@ public class PropertiesTesterTest {
 
     public static class Simple {
 
-        private boolean aBoolean;
+		private boolean aBoolean;
         private byte aByte;
         private char aChar;
         private short aShort;
@@ -269,12 +271,23 @@ public class PropertiesTesterTest {
         private long aLong;
         private float aFloat;
         private double aDouble;
+        private Boolean anotherBoolean;
+        private Byte anotherByte;
+        private Character anotherChar;
+        private Short anotherShort;
+        private Integer anotherInt;
+        private Long anotherLong;
+        private Float anotherFloat;
+        private Double anotherDouble;
+        
         private String aString;
         private Object anObject;
         private Collection<Object> aCollection;
         private List<String> aList;
         private Map<String, Date> aMap;
+        private SortedMap<String, Date> anotherMap;
         private Set<?> aSet;
+        private SortedSet<?> anotherSet;
         private Abstract abstractType;
         private Interface interfaceType;
         private Thread thread;
@@ -350,6 +363,70 @@ public class PropertiesTesterTest {
         public void setADouble(double aDouble) {
             this.aDouble = aDouble;
         }
+        
+        public Boolean getAnotherBoolean() {
+			return anotherBoolean;
+		}
+
+		public void setAnotherBoolean(Boolean anotherBoolean) {
+			this.anotherBoolean = anotherBoolean;
+		}
+
+		public Byte getAnotherByte() {
+			return anotherByte;
+		}
+
+		public void setAnotherByte(Byte anotherByte) {
+			this.anotherByte = anotherByte;
+		}
+
+		public Character getAnotherChar() {
+			return anotherChar;
+		}
+
+		public void setAnotherChar(Character anotherChar) {
+			this.anotherChar = anotherChar;
+		}
+
+		public Short getAnotherShort() {
+			return anotherShort;
+		}
+
+		public void setAnotherShort(Short anotherShort) {
+			this.anotherShort = anotherShort;
+		}
+
+		public Integer getAnotherInt() {
+			return anotherInt;
+		}
+
+		public void setAnotherInt(Integer anotherInt) {
+			this.anotherInt = anotherInt;
+		}
+
+		public Long getAnotherLong() {
+			return anotherLong;
+		}
+
+		public void setAnotherLong(Long anotherLong) {
+			this.anotherLong = anotherLong;
+		}
+
+		public Float getAnotherFloat() {
+			return anotherFloat;
+		}
+
+		public void setAnotherFloat(Float anotherFloat) {
+			this.anotherFloat = anotherFloat;
+		}
+
+		public Double getAnotherDouble() {
+			return anotherDouble;
+		}
+
+		public void setAnotherDouble(Double anotherDouble) {
+			this.anotherDouble = anotherDouble;
+		}
 
         public String getAString() {
             return aString;
@@ -398,6 +475,22 @@ public class PropertiesTesterTest {
         public void setASet(Set<?> aSet) {
             this.aSet = aSet;
         }
+
+		public SortedMap<String, Date> getAnotherMap() {
+			return anotherMap;
+		}
+
+		public void setAnotherMap(SortedMap<String, Date> anotherMap) {
+			this.anotherMap = anotherMap;
+		}
+
+		public SortedSet<?> getAnotherSet() {
+			return anotherSet;
+		}
+
+		public void setAnotherSet(SortedSet<?> anotherSet) {
+			this.anotherSet = anotherSet;
+		}
 
         public Abstract getAbstractType() {
             return abstractType;
