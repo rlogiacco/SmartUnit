@@ -68,8 +68,8 @@ public class AbstractDelegatingWebDriverTest {
 
 	@Test
 	public void testGet() {
-		mock.get("http://www.google.com");
-		verify(mock.delegate).get("http://www.google.com");
+		mock.get("https://github.com/");
+		verify(mock.delegate).get("https://github.com/");
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class AbstractDelegatingWebDriverTest {
 
 	@Test
 	public void testExecuteAsyncScript() {
-		mock.get("http://www.google.com");
+		mock.get("https://github.com/");
 		mock.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
 		mock.executeAsyncScript("window.setTimeout(arguments[arguments.length - 1], 500);");
 		verify((JavascriptExecutor) mock.delegate).executeAsyncScript("window.setTimeout(arguments[arguments.length - 1], 500);");
@@ -142,7 +142,7 @@ public class AbstractDelegatingWebDriverTest {
 
 	@Test
 	public void testExecuteScript() {
-		mock.get("http://www.google.com");
+		mock.get("https://github.com/");
 		mock.executeScript("window.open('','other')");
 		verify((JavascriptExecutor) mock.delegate).executeScript("window.open('','other')");
 	}

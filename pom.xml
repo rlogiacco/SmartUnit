@@ -65,7 +65,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.5.201505241946</version>
+        <version>0.7.9</version>
         <executions>
           <execution>
             <goals>
@@ -242,7 +242,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.6</version>
+      <version>1.16.20</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
