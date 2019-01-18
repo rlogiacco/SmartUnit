@@ -101,7 +101,7 @@ public class ConstructorsTester extends AbstractTester<ConstructorsTester> {
 			throws Exception {
 		for (Field field : fields) {
 			if (field.getType().equals(type)) {
-				if (field.get(instance) == value) {
+				if (field.get(instance) == value || value.equals(field.get(instance))) {
 					return;
 				}
 			}

@@ -66,6 +66,8 @@ public class ConstructorsTesterTest {
     	
     	private String cause;
     	
+    	private int code;
+    	
         public TestException() {
         }
 
@@ -94,6 +96,11 @@ public class ConstructorsTesterTest {
         public TestException(String message, String cause) {
             super(message);
             this.cause = cause;
+        }
+        
+        public TestException(String message, int code) {
+            super(message);
+            this.code = code;
         }
     }
 
